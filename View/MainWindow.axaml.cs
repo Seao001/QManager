@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace QManager;
+namespace QManager.Views;
 
 public partial class MainWindow : Window
 {

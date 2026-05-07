@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QManager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f255497230a7e5418a180d4864433a84aac9548")]
 [assembly: System.Reflection.AssemblyProductAttribute("QManager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QManager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
