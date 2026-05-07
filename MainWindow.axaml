@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="QManager.MainWindow"
+        Title="QManager Dashboard"
+        Background="#5584CA">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            
+            <!-- Header fără padding -->
+            <TextBlock Text="Panou de Control" 
+                       FontSize="32" 
+                       FontWeight="Heavy" 
+                       Foreground="#562B2B"
+                       Margin="10,10,0,20"/>
+
+            <!-- Grila de Carduri -->
+            <UniformGrid Columns="2">
+                
+                <!-- Card 1 -->
+                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
+                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 2 -->
+                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="" FontSize="20"/>
+                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
+                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 3 -->
+                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="" FontSize="20"/>
+                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
+                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
+                        <Button Content="Gestionează" Background="#2196F3" Foreground="Black" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Card 4 -->
+                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="" FontSize="20"/>
+                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
+                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+            </UniformGrid>
+        </StackPanel>
+    </ScrollViewer>
+</Window>
