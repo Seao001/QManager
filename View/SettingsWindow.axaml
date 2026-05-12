@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="QManager.View.SettingsWindow"
+        Title="Setări" Width="400" Height="300">
+    
+    <StackPanel Spacing="20">
+        <StackPanel.Margin>20</StackPanel.Margin>
+        <TextBlock Text="Setări Sistem" FontSize="20" FontWeight="Bold"/>
+        <ToggleSwitch Content="Mod Întunecat" IsChecked="{Binding IsDarkMode}"/>
+        <Button Content="Salvează" Command="{Binding SaveSettingsCommand}"/>
+    </StackPanel>
+</Window>

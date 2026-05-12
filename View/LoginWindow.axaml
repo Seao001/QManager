@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="QManager.View.LoginWindow"
+        Title="Autentificare - Queue Manager"
+        Width="400"
+        Height="450"
+        WindowStartupLocation="CenterScreen"
+        Background="#2b2b2b">
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Spacing="15" Width="300">
+            <TextBlock Text="QManager" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+
+            <TextBox Watermark="Utilizator" Text="{Binding Username}" Height="40"/>
+            <TextBox Watermark="Parola" PasswordChar="*" Text="{Binding Password}" Height="40"/>
+
+            <Button Content="Conectare"
+                    Command="{Binding LoginCommand}"
+                    Background="#0078d4"
+                    Foreground="White"
+                    Height="40"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"/>
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="#ff4500" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>

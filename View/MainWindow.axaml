@@ -1,59 +1,54 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="QManager.Views.MainWindow"
-        Title="QManager Dashboard"
-        Background="#5584CA">
+        xmlns:vm="clr-namespace:QManager.ViewModels"
+        x:Class="QManager.View.MainWindow"
+        x:Name="Root"
+        x:DataType="vm:MainViewModel"
+        Title="Sistem Gestiune Cozi" WindowState="Maximized">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            
-            <!-- Header fără padding -->
-            <TextBlock Text="Panou de Control" 
-                       FontSize="32" 
-                       FontWeight="Heavy" 
-                       Foreground="#562B2B"
-                       Margin="10,10,0,20"/>
-
-            <!-- Grila de Carduri -->
-            <UniformGrid Columns="2">
+    <Grid ColumnDefinitions="*, 400">
+        <Border Grid.Column="0" Background="#f0f0f0" Padding="20">
+            <StackPanel>
+                <TextBlock Text="Selectati Serviciul Dorit" FontSize="30" HorizontalAlignment="Center" Margin="0,0,0,30"/>
                 
-                <!-- Card 1 -->
-                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
-                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
+                <ItemsControl ItemsSource="{Binding Services}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding ServiceName}"
+                                    Command="{Binding ViewModel.GenerateTicketCommand, ElementName=Root}"
+                                    CommandParameter="{Binding}"
+                                    Width="250" Height="150" Margin="15" FontSize="20"
+                                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    Background="White" CornerRadius="10"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Background="#e1e1e1" BorderBrush="Gray" BorderThickness="1,0,0,0" Padding="20">
+            <StackPanel Spacing="20">
+                <TextBlock Text="Panou Operator" FontSize="20" FontWeight="Bold"/>
+                
+                <Border Background="White" Padding="20" CornerRadius="5">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="Client Curent:" FontSize="14" Foreground="Gray"/>
+                        <TextBlock Text="{Binding CurrentTicket.TicketLabel}" FontSize="40" FontWeight="Black" Foreground="#0078d4"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Card 2 -->
-                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="" FontSize="20"/>
-                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
-                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 3 -->
-                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="" FontSize="20"/>
-                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
-                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
-                        <Button Content="Gestionează" Background="#2196F3" Foreground="Black" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 4 -->
-                <Border Margin="5" CornerRadius="0" Background="White" BoxShadow="0 2 5 0 #15000000">
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="" FontSize="20"/>
-                        <TextBlock Text="" FontSize="14" Foreground="#666666"/>
-                        <TextBlock Text="" FontSize="24" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
-
-            </UniformGrid>
-        </StackPanel>
-    </ScrollViewer>
+                <Button Content="URMATORUL CLIENT" 
+                        Command="{Binding CallNextCommand}"
+                        Height="60" HorizontalAlignment="Stretch" Background="#28a745" Foreground="White"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+                
+                <Button Content="Setari Sistem" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </Border>
+    </Grid>
 </Window>

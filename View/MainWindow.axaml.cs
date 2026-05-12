@@ -1,11 +1,17 @@
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using QManager.ViewModels;
 
-namespace QManager.Views;
-
-public partial class MainWindow : Window
+namespace QManager.View
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        public MainWindow()
+        {
+            AvaloniaXamlLoader.Load(this);
+            DataContext = new MainViewModel();
+        }
+
+        public MainViewModel ViewModel => (MainViewModel)DataContext!;
     }
 }

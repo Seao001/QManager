@@ -46,23 +46,27 @@
           "dependencies": {
             "Avalonia": {
               "target": "Package",
-              "version": "[12.0.2, )"
+              "version": "[11.0.10, )"
             },
             "Avalonia.Desktop": {
               "target": "Package",
-              "version": "[12.0.2, )"
+              "version": "[11.0.10, )"
             },
             "Avalonia.Fonts.Inter": {
               "target": "Package",
-              "version": "[12.0.2, )"
+              "version": "[11.0.10, )"
             },
             "Avalonia.Themes.Fluent": {
               "target": "Package",
-              "version": "[12.0.2, )"
+              "version": "[11.0.10, )"
             },
-            "AvaloniaUI.DiagnosticsSupport": {
+            "CommunityToolkit.Mvvm": {
               "target": "Package",
-              "version": "[2.2.1, )"
+              "version": "[8.4.2, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.7.0, )"
             }
           },
           "imports": [
