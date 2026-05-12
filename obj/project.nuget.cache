@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "lID9hfNLRfM=",
+  "dgSpecHash": "pDeU6a9KI9Q=",
   "success": true,
   "projectFilePath": "C:\\Users\\User\\Documents\\QManager\\QManager.csproj",
   "expectedPackageFiles": [
@@ -47,7 +47,7 @@
     {
       "code": "NU1903",
       "level": "Warning",
-      "message": "Package 'Tmds.DBus.Protocol' 0.15.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
+      "message": "У пакета \"Tmds.DBus.Protocol\" 0.15.0 есть известная уязвимость https://github.com/advisories/GHSA-xrw6-gwf8-vvr9 (уровень серьезности: высокий)",
       "projectPath": "C:\\Users\\User\\Documents\\QManager\\QManager.csproj",
       "warningLevel": 1,
       "filePath": "C:\\Users\\User\\Documents\\QManager\\QManager.csproj",

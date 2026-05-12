@@ -1,3 +1,4 @@
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QManager.DB.Repositories;
@@ -8,6 +9,8 @@ namespace QManager.ViewModels
     public partial class LoginViewModel : ObservableObject
     {
         private readonly AdminRepository _adminRepo = new AdminRepository();
+
+        public event EventHandler? LoginSucceeded;
 
         [ObservableProperty]
         private string _username = string.Empty;
@@ -24,12 +27,12 @@ namespace QManager.ViewModels
             var admin = _adminRepo.Login(Username, Password);
             if (admin != null)
             {
-                // Aici vei adăuga logica pentru a deschide MainWindow
-                ErrorMessage = "Succes! Se încarcă...";
+                ErrorMessage = string.Empty;
+                LoginSucceeded?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                ErrorMessage = "Utilizator sau parolă incorectă.";
+                ErrorMessage = "Incorrect username or password.";
             }
         }
     }

@@ -10,7 +10,7 @@
         "projectUniqueName": "C:\\Users\\User\\Documents\\QManager\\QManager.csproj",
         "projectName": "QManager",
         "projectPath": "C:\\Users\\User\\Documents\\QManager\\QManager.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages",
         "outputPath": "C:\\Users\\User\\Documents\\QManager\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [

@@ -4,12 +4,12 @@
         x:Class="QManager.View.MainWindow"
         x:Name="Root"
         x:DataType="vm:MainViewModel"
-        Title="Sistem Gestiune Cozi" WindowState="Maximized">
+        Title="Queue Manager" WindowState="Maximized">
 
     <Grid ColumnDefinitions="*, 400">
         <Border Grid.Column="0" Background="#f0f0f0" Padding="20">
             <StackPanel>
-                <TextBlock Text="Selectati Serviciul Dorit" FontSize="30" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+                <TextBlock Text="Select the desired service" FontSize="30" HorizontalAlignment="Center" Margin="0,0,0,30"/>
                 
                 <ItemsControl ItemsSource="{Binding Services}">
                     <ItemsControl.ItemsPanel>
@@ -33,21 +33,21 @@
 
         <Border Grid.Column="1" Background="#e1e1e1" BorderBrush="Gray" BorderThickness="1,0,0,0" Padding="20">
             <StackPanel Spacing="20">
-                <TextBlock Text="Panou Operator" FontSize="20" FontWeight="Bold"/>
+                <TextBlock Text="Operator Panel" FontSize="20" FontWeight="Bold"/>
                 
                 <Border Background="White" Padding="20" CornerRadius="5">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="Client Curent:" FontSize="14" Foreground="Gray"/>
+                        <TextBlock Text="Current Client:" FontSize="14" Foreground="Gray"/>
                         <TextBlock Text="{Binding CurrentTicket.TicketLabel}" FontSize="40" FontWeight="Black" Foreground="#0078d4"/>
                     </StackPanel>
                 </Border>
 
-                <Button Content="URMATORUL CLIENT" 
+                <Button Content="NEXT CLIENT" 
                         Command="{Binding CallNextCommand}"
                         Height="60" HorizontalAlignment="Stretch" Background="#28a745" Foreground="White"
                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
                 
-                <Button Content="Setari Sistem" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Stretch"/>
+                <Button Content="System Settings" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Stretch"/>
             </StackPanel>
         </Border>
     </Grid>

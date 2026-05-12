@@ -6,5 +6,38 @@
 
     <Application.Styles>
         <FluentTheme />
+        <Style Selector="Button.plain-button">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#222" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Foreground" Value="#111" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.plain-button:pointerover">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#222" />
+            <Setter Property="Foreground" Value="#111" />
+        </Style>
+        <Style Selector="Button.plain-button:pressed">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#222" />
+            <Setter Property="Foreground" Value="#111" />
+        </Style>
     </Application.Styles>
 </Application>

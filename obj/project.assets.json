@@ -1930,7 +1930,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\User\\.nuget\\packages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -1938,7 +1938,7 @@
       "projectUniqueName": "C:\\Users\\User\\Documents\\QManager\\QManager.csproj",
       "projectName": "QManager",
       "projectPath": "C:\\Users\\User\\Documents\\QManager\\QManager.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages",
       "outputPath": "C:\\Users\\User\\Documents\\QManager\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
@@ -2296,7 +2296,7 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Tmds.DBus.Protocol' 0.15.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
+      "message": "У пакета \"Tmds.DBus.Protocol\" 0.15.0 есть известная уязвимость https://github.com/advisories/GHSA-xrw6-gwf8-vvr9 (уровень серьезности: высокий)",
       "libraryId": "Tmds.DBus.Protocol",
       "targetGraphs": [
         "net10.0"

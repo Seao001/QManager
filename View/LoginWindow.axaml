@@ -1,27 +1,108 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="QManager.View.LoginWindow"
-        Title="Autentificare - Queue Manager"
-        Width="400"
-        Height="450"
+        Title="Sign in"
+        Width="900"
+        Height="620"
         WindowStartupLocation="CenterScreen"
-        Background="#2b2b2b">
-    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-        <StackPanel Spacing="15" Width="300">
-            <TextBlock Text="QManager" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+        Background="#f2f2f2">
+    <Grid>
+        <Border x:Name="SignInPanel"
+                Width="320"
+                MinHeight="360"
+                Background="White"
+                BorderBrush="Black"
+                BorderThickness="2"
+                CornerRadius="18"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Padding="28">
+            <StackPanel Spacing="14">
+                <TextBlock Text="Sign in"
+                           FontSize="36"
+                           FontWeight="Normal"
+                           Foreground="#111"
+                           HorizontalAlignment="Left"/>
 
-            <TextBox Watermark="Utilizator" Text="{Binding Username}" Height="40"/>
-            <TextBox Watermark="Parola" PasswordChar="*" Text="{Binding Password}" Height="40"/>
+                <TextBox x:Name="SignInUsernameTextBox"
+                         Watermark="User Name"
+                         Text="{Binding Username}"
+                         Height="40"/>
+                <TextBox x:Name="SignInPasswordTextBox"
+                         Watermark="Password"
+                         PasswordChar="*"
+                         Text="{Binding Password}"
+                         Height="40"/>
 
-            <Button Content="Conectare"
-                    Command="{Binding LoginCommand}"
-                    Background="#0078d4"
-                    Foreground="White"
-                    Height="40"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"/>
+                <Button Content="Sign in"
+                        Command="{Binding LoginCommand}"
+                        Classes="plain-button"
+                        Height="32"
+                        HorizontalAlignment="Center"
+                        Width="160"
+                        HorizontalContentAlignment="Center"/>
 
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="#ff4500" HorizontalAlignment="Center"/>
-        </StackPanel>
+                <TextBlock Text="Sign Up"
+                           PointerPressed="ShowSignUpPanel_PointerPressed"
+                           Foreground="#444"
+                           HorizontalAlignment="Center"
+                           Cursor="Hand"/>
+
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#cc3300"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="SignUpPanel"
+                Width="320"
+                MinHeight="420"
+                Background="White"
+                BorderBrush="#222"
+                BorderThickness="2"
+                CornerRadius="18"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Padding="28">
+            <StackPanel Spacing="14">
+                <TextBlock Text="Sign Up"
+                           FontSize="36"
+                           FontWeight="Normal"
+                           Foreground="Black"
+                           HorizontalAlignment="Left"/>
+
+                <TextBox x:Name="NameTextBox"
+                         Watermark="Name"
+                         Height="40"/>
+                <TextBox x:Name="PasswordSignUpTextBox"
+                         Watermark="Password"
+                         PasswordChar="*"
+                         Height="40"/>
+                <TextBox x:Name="ConfirmPasswordTextBox"
+                         Watermark="Confirm Password"
+                         PasswordChar="*"
+                         Height="40"/>
+
+                <Button Content="Sign up"
+                        Click="CreateAccount_Click"
+                        Classes="plain-button"
+                        Height="32"
+                        HorizontalAlignment="Center"
+                        Width="160"
+                        HorizontalContentAlignment="Center"/>
+
+                <TextBlock Text="Back to Sign In"
+                           PointerPressed="ShowSignInPanel_PointerPressed"
+                           Foreground="#444"
+                           HorizontalAlignment="Center"
+                           Cursor="Hand"/>
+
+                <TextBlock x:Name="StatusTextBlock"
+                           Foreground="#cc3300"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
