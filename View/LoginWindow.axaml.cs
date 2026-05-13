@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using QManager.DB.Repositories;
+using QManager.Service;
 using QManager.ViewModels;
 
 namespace QManager.View
@@ -104,14 +105,8 @@ namespace QManager.View
 
         private void OnLoginSucceeded(object? sender, EventArgs e)
         {
-            var mainWindow = new MainWindow();
-            if (Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
-            {
-                desktop.MainWindow = mainWindow;
-            }
-
-            mainWindow.Show();
-            Close();
+            SessionState.SignIn(_viewModel.Username);
+            WindowNavigator.Open<MainWindow>(this);
         }
 
         private void ShowSignInPanel()
@@ -126,22 +121,17 @@ namespace QManager.View
 
         private void ResolveControls()
         {
-            _signInPanel = this.FindControl<Border>("SignInPanel")
-                ?? throw new InvalidOperationException("SignInPanel was not found in LoginWindow.axaml.");
-            _signUpPanel = this.FindControl<Border>("SignUpPanel")
-                ?? throw new InvalidOperationException("SignUpPanel was not found in LoginWindow.axaml.");
-            _signInUsernameTextBox = this.FindControl<TextBox>("SignInUsernameTextBox")
-                ?? throw new InvalidOperationException("SignInUsernameTextBox was not found in LoginWindow.axaml.");
-            _signInPasswordTextBox = this.FindControl<TextBox>("SignInPasswordTextBox")
-                ?? throw new InvalidOperationException("SignInPasswordTextBox was not found in LoginWindow.axaml.");
-            _nameTextBox = this.FindControl<TextBox>("NameTextBox")
-                ?? throw new InvalidOperationException("NameTextBox was not found in LoginWindow.axaml.");
-            _passwordSignUpTextBox = this.FindControl<TextBox>("PasswordSignUpTextBox")
-                ?? throw new InvalidOperationException("PasswordSignUpTextBox was not found in LoginWindow.axaml.");
-            _confirmPasswordTextBox = this.FindControl<TextBox>("ConfirmPasswordTextBox")
-                ?? throw new InvalidOperationException("ConfirmPasswordTextBox was not found in LoginWindow.axaml.");
-            _statusTextBlock = this.FindControl<TextBlock>("StatusTextBlock")
-                ?? throw new InvalidOperationException("StatusTextBlock was not found in LoginWindow.axaml.");
+            _signInPanel = GetRequiredControl<Border>("SignInPanel");
+            _signUpPanel = GetRequiredControl<Border>("SignUpPanel");
+            _signInUsernameTextBox = GetRequiredControl<TextBox>("SignInUsernameTextBox");
+            _signInPasswordTextBox = GetRequiredControl<TextBox>("SignInPasswordTextBox");
+            _nameTextBox = GetRequiredControl<TextBox>("NameTextBox");
+            _passwordSignUpTextBox = GetRequiredControl<TextBox>("PasswordSignUpTextBox");
+            _confirmPasswordTextBox = GetRequiredControl<TextBox>("ConfirmPasswordTextBox");
+            _statusTextBlock = GetRequiredControl<TextBlock>("StatusTextBlock");
         }
+
+        private T GetRequiredControl<T>(string name) where T : Control =>
+            this.FindControl<T>(name) ?? throw new InvalidOperationException($"{typeof(T).Name} '{name}' was not found in LoginWindow.axaml.");
     }
 }

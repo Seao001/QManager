@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,7 +14,6 @@ namespace QManager.ViewModels
         private readonly ServiceRepository _serviceRepo = new ServiceRepository();
         private Ticket? _currentTicket;
 
-        // ObservableCollection de QueueService
         public ObservableCollection<QueueService> Services { get; } = new();
 
         public Ticket? CurrentTicket
@@ -26,12 +25,14 @@ namespace QManager.ViewModels
         public ICommand GenerateTicketCommand { get; }
         public ICommand CallNextCommand { get; }
         public ICommand OpenSettingsCommand { get; }
+        public ICommand OpenDashboardCommand { get; }
 
         public MainViewModel()
         {
             GenerateTicketCommand = new RelayCommand<QueueService?>(GenerateTicket);
             CallNextCommand = new RelayCommand(CallNext);
             OpenSettingsCommand = new RelayCommand(OpenSettings);
+            OpenDashboardCommand = new RelayCommand(OpenDashboard);
 
             LoadServices();
         }
@@ -40,18 +41,25 @@ namespace QManager.ViewModels
         {
             Services.Clear();
             var list = _serviceRepo.GetAllServices();
-            foreach (var s in list) Services.Add(s);
+            foreach (var service in list)
+            {
+                Services.Add(service);
+            }
         }
 
         private void GenerateTicket(QueueService? selectedService)
         {
-            if (selectedService == null) return;
-            
-            var newTicket = new Ticket 
-            { 
-                TicketLabel = $"{selectedService.ServiceName}-001", // Logica de incrementare aici
-                ServiceId = selectedService.ServiceId 
+            if (selectedService == null)
+            {
+                return;
+            }
+
+            var newTicket = new Ticket
+            {
+                TicketLabel = $"{selectedService.ServiceName}-001",
+                ServiceId = selectedService.ServiceId
             };
+
             _ticketRepo.AddTicket(newTicket);
         }
 
@@ -62,8 +70,12 @@ namespace QManager.ViewModels
 
         private void OpenSettings()
         {
-            var settingsWindow = new SettingsWindow();
-            settingsWindow.Show();
+            // Navigation is now handled by MainWindow as a single-page host.
+        }
+
+        private void OpenDashboard()
+        {
+            // Navigation is now handled by MainWindow as a single-page host.
         }
     }
 }

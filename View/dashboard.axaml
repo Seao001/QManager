@@ -1,0 +1,177 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QManager.View.DashboardView"
+             Background="Transparent">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+        </Style>
+
+        <Style Selector="Button.menu">
+            <Setter Property="Width" Value="190" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="#FBFAF6" />
+            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+
+        <Style Selector="Button.menu:disabled">
+            <Setter Property="Background" Value="#D9E2EC" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="Button.action">
+            <Setter Property="Background" Value="#FBFAF6" />
+            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="14,8" />
+        </Style>
+
+        <Style Selector="Button.ticket">
+            <Setter Property="Width" Value="136" />
+            <Setter Property="Height" Value="122" />
+            <Setter Property="Margin" Value="0,0,14,16" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="BorderThickness" Value="1.8" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+
+        <Style Selector="Border.ticket">
+            <Setter Property="Width" Value="136" />
+            <Setter Property="Height" Value="122" />
+            <Setter Property="Margin" Value="0,0,14,16" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="BorderThickness" Value="1.8" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid Margin="24" RowDefinitions="Auto,*">
+                        <Grid ColumnDefinitions="*,Auto,Auto">
+                            <StackPanel>
+                                <TextBlock FontSize="24"
+                                           FontWeight="SemiBold"
+                                           Text="{Binding WaitingNowText}" />
+                                <TextBlock Margin="0,4,0,0"
+                                           Foreground="#5E6872"
+                                           Text="{Binding AverageWaitText}" />
+                            </StackPanel>
+
+                            <Button Grid.Column="1"
+                                    Classes="action"
+                                    Margin="0,0,12,0"
+                                    Content="Reset Queue"
+                                    Click="ResetQueue_Click" />
+                            <Button Grid.Column="2"
+                                    Classes="action"
+                                    Content="Export data"
+                                    Click="ExportData_Click" />
+                        </Grid>
+
+                        <Grid Grid.Row="1"
+                              Margin="0,24,0,0"
+                              ColumnDefinitions="*,2,*">
+                            <StackPanel Grid.Column="0" Spacing="18">
+                                <TextBlock FontSize="36"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           Text="On hold" />
+
+                                <ScrollViewer>
+                                    <ItemsControl ItemsSource="{Binding OnHoldTickets}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Classes="ticket"
+                                                        Tag="{Binding}"
+                                                        Click="MoveToReady_Click">
+                                                    <Grid RowDefinitions="28,34,1,*">
+                                                        <TextBlock Margin="8,0"
+                                                                   VerticalAlignment="Center"
+                                                                   FontSize="14"
+                                                                   Text="Talon" />
+                                                        <Border Grid.Row="1"
+                                                                BorderBrush="#2A3138"
+                                                                BorderThickness="0,1.5,0,1.5">
+                                                            <TextBlock HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       FontSize="15"
+                                                                       Text="{Binding Talon}" />
+                                                        </Border>
+                                                        <TextBlock Grid.Row="3"
+                                                                   Margin="8,8,8,0"
+                                                                   FontSize="14"
+                                                                   Text="{Binding RoomLabel}" />
+                                                    </Grid>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </StackPanel>
+
+                            <Border Grid.Column="1"
+                                    Background="#2A3138"
+                                    Margin="0,12" />
+
+                            <StackPanel Grid.Column="2"
+                                        Margin="24,0,0,0"
+                                        Spacing="18">
+                                <TextBlock FontSize="36"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           Text="Ready for service" />
+
+                                <ScrollViewer>
+                                    <ItemsControl ItemsSource="{Binding ReadyTickets}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Classes="ticket">
+                                                    <Grid RowDefinitions="28,34,1,*">
+                                                        <TextBlock Margin="8,0"
+                                                                   VerticalAlignment="Center"
+                                                                   FontSize="14"
+                                                                   Text="Talon" />
+                                                        <Border Grid.Row="1"
+                                                                BorderBrush="#2A3138"
+                                                                BorderThickness="0,1.5,0,1.5">
+                                                            <TextBlock HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       FontSize="15"
+                                                                       Text="{Binding Talon}" />
+                                                        </Border>
+                                                        <TextBlock Grid.Row="3"
+                                                                   Margin="8,8,8,0"
+                                                                   FontSize="14"
+                                                                   Text="{Binding RoomLabel}" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Grid>
+    </Grid>
+</UserControl>

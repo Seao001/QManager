@@ -29,6 +29,12 @@ build_property.EnableCodeStyleSeverity =
 [c:/Users/User/Documents/QManager/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[c:/Users/User/Documents/QManager/View/BankView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[c:/Users/User/Documents/QManager/View/dashboard.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [c:/Users/User/Documents/QManager/View/LoginWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
@@ -36,4 +42,7 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [c:/Users/User/Documents/QManager/View/SettingsWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[c:/Users/User/Documents/QManager/View/TalonWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

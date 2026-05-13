@@ -1,12 +1,99 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="QManager.View.SettingsWindow"
-        Title="Setări" Width="400" Height="300">
-    
-    <StackPanel Spacing="20">
-        <StackPanel.Margin>20</StackPanel.Margin>
-        <TextBlock Text="Setări Sistem" FontSize="20" FontWeight="Bold"/>
-        <ToggleSwitch Content="Mod Întunecat" IsChecked="{Binding IsDarkMode}"/>
-        <Button Content="Salvează" Command="{Binding SaveSettingsCommand}"/>
-    </StackPanel>
-</Window>
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QManager.View.SettingsView"
+             Background="Transparent">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="#22262B" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+        </Style>
+
+        <Style Selector="Button.nav">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#22262B" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="14,7" />
+            <Setter Property="Foreground" Value="#22262B" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <Grid Margin="26,18,26,18" RowDefinitions="Auto,Auto,Auto,*,Auto">
+                        <Grid ColumnDefinitions="Auto,220,*,Auto" VerticalAlignment="Top">
+                            <Button Classes="nav"
+                                    Content="Change AdminName"
+                                    HorizontalAlignment="Left"
+                                    Click="ChangeAdminName_Click" />
+
+                            <Border Grid.Column="1"
+                                    Margin="24,0,24,0"
+                                    Height="42"
+                                    CornerRadius="21"
+                                    BorderBrush="#22262B"
+                                    BorderThickness="1.5"
+                                    Background="#FFFFFF">
+                                <TextBlock HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Text="Admin Name" />
+                            </Border>
+
+                            <Border Grid.Column="3"
+                                    Width="58"
+                                    Height="58"
+                                    CornerRadius="29"
+                                    BorderBrush="#22262B"
+                                    BorderThickness="1.5"
+                                    Background="#FFFFFF">
+                                <TextBlock HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="28"
+                                           Text="O" />
+                            </Border>
+                        </Grid>
+
+                        <Button Grid.Row="1"
+                                Classes="nav"
+                                Width="210"
+                                Margin="0,16,0,0"
+                                HorizontalAlignment="Center"
+                                Content="Change Photo"
+                                Click="ChangePhoto_Click" />
+
+                        <StackPanel Grid.Row="2"
+                                    Margin="0,34,0,0"
+                                    HorizontalAlignment="Center"
+                                    Spacing="22">
+                            <Button Classes="nav" Width="340" Content="Change Password" Click="ChangePassword_Click" />
+                            <Button Classes="nav" Width="340" Content="Change Language" Click="ChangeLanguage_Click" />
+                            <Button Classes="nav" Width="340" Content="About us" Click="AboutUs_Click" />
+                        </StackPanel>
+
+                        <TextBlock x:Name="SettingsStatusText"
+                                   Grid.Row="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Foreground="#5E6872"
+                                   TextWrapping="Wrap" />
+
+                        <Grid Grid.Row="4"
+                              Margin="0,18,0,0"
+                              ColumnDefinitions="*,Auto,Auto,Auto">
+                            <Button Grid.Column="1"
+                                    Classes="nav"
+                                    Width="180"
+                                    Content="Sign Out"
+                                    Click="SignOut_Click" />
+
+                            <Border Grid.Column="2" Width="36" />
+
+                            <ToggleSwitch Grid.Column="3"
+                                          Width="140"
+                                          HorizontalAlignment="Right"
+                                          IsChecked="{Binding IsDarkMode}"
+                                          Content="Dark/Light Mode" />
+                        </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QManager.View.BankView"
+             Background="#FBFAF6">
+    <Border Background="#FBFAF6"
+            BorderBrush="#2A3138"
+            BorderThickness="2"
+            CornerRadius="10"
+            Margin="0">
+        <Grid Margin="34" RowDefinitions="Auto,Auto,Auto,*">
+            <TextBlock FontSize="34"
+                       FontWeight="SemiBold"
+                       Text="Coupon Generation"
+                       HorizontalAlignment="Center" />
+
+            <TextBlock Grid.Row="1"
+                       Margin="0,8,0,0"
+                       FontSize="16"
+                       Foreground="#5E6872"
+                       Text="Create a new talon for a client and assign it to a room."
+                       HorizontalAlignment="Center" />
+
+            <Grid Grid.Row="2"
+                  Margin="0,40,0,0"
+                  ColumnDefinitions="*,36,*">
+                <StackPanel Grid.Column="0" Spacing="10">
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="Talon" />
+                    <TextBox x:Name="TalonTextBox"
+                             Classes="form"
+                             Height="42"
+                             Watermark="Ex: A11" />
+                    <Button Classes="action"
+                            Width="220"
+                            Content="Generate Talon"
+                            Click="GenerateTalon_Click" />
+                </StackPanel>
+
+                <Border Grid.Column="1"
+                        Width="2"
+                        Margin="17,8"
+                        Background="#B4BCC4"
+                        HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Column="2" Spacing="10">
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="Room" />
+                    <TextBox x:Name="RoomTextBox"
+                             Classes="form"
+                             Height="42"
+                             Watermark="Ex: 03" />
+                    <TextBlock Foreground="#5E6872"
+                               Text="Room number will appear in dashboard and casier cards." />
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Grid.Row="3"
+                        VerticalAlignment="Bottom"
+                        Spacing="14">
+                <Button Classes="action"
+                        Width="180"
+                        HorizontalAlignment="Center"
+                        Content="Add Ticket"
+                        Click="AddTicket_Click" />
+                <TextBlock x:Name="StatusTextBlock"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           Foreground="#5E6872"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
