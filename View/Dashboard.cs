@@ -8,13 +8,15 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using QuestPDF;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 using QManager.Service;
 
 namespace QManager.View
 {
     public partial class DashboardView : UserControl, INotifyPropertyChanged
     {
-        private string _averageWaitText = "Avg. Wait Time - 05:20 min";
         private readonly TicketState _ticketState = TicketState.Instance;
 
         public new event PropertyChangedEventHandler? PropertyChanged;
@@ -25,20 +27,7 @@ namespace QManager.View
 
         public string WaitingNowText => _ticketState.WaitingNowText;
 
-        public string AverageWaitText
-        {
-            get => _averageWaitText;
-            private set
-            {
-                if (_averageWaitText == value)
-                {
-                    return;
-                }
 
-                _averageWaitText = value;
-                OnPropertyChanged();
-            }
-        }
 
         public DashboardView()
         {
@@ -65,11 +54,20 @@ namespace QManager.View
             _ticketState.MoveToReady(ticket);
         }
 
+        private void MoveToOnHold_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not Button { Tag: TicketViewModel ticket })
+            {
+                return;
+            }
+
+            _ticketState.MoveToOnHold(ticket);
+        }
+
         private void ResetQueue_Click(object? sender, RoutedEventArgs e)
         {
             OnHoldTickets.Clear();
             ReadyTickets.Clear();
-            AverageWaitText = "Avg. Wait Time - 00:00 min";
         }
 
         private async void ExportData_Click(object? sender, RoutedEventArgs e)
@@ -82,15 +80,15 @@ namespace QManager.View
 
             var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
-                Title = "Export queue data",
-                SuggestedFileName = $"queue-dashboard-{DateTime.Now:yyyy-MM-dd-HHmm}.csv",
-                DefaultExtension = "csv",
+                Title = "Exportă Raport PDF",
+                SuggestedFileName = $"raport-cozi-{DateTime.Now:yyyy-MM-dd-HHmm}.pdf",
+                DefaultExtension = "pdf",
                 FileTypeChoices = new[]
                 {
-                    new FilePickerFileType("CSV file")
+                    new FilePickerFileType("Document PDF")
                     {
-                        Patterns = new[] { "*.csv" },
-                        MimeTypes = new[] { "text/csv" }
+                        Patterns = new[] { "*.pdf" },
+                        MimeTypes = new[] { "application/pdf" }
                     }
                 }
             });
@@ -100,18 +98,56 @@ namespace QManager.View
                 return;
             }
 
-            await using var stream = await file.OpenWriteAsync();
-            await using var writer = new StreamWriter(stream, Encoding.UTF8);
-
-            await writer.WriteLineAsync("Status,Talon,Room");
-            foreach (var ticket in OnHoldTickets)
+            try
             {
-                await writer.WriteLineAsync($"On hold,{ticket.Talon},{ticket.Room}");
+                Settings.License = LicenseType.Community;
+
+                var document = Document.Create(container =>
+                {
+                    container.Page(page =>
+                    {
+                        page.Margin(40);
+                        page.Header().Text("Raport Gestiune Cozi").SemiBold().FontSize(22).FontColor(QuestPDF.Helpers.Colors.Blue.Medium);
+
+                        page.Content().PaddingVertical(10).Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                            });
+
+                            table.Header(header =>
+                            {
+                                header.Cell().BorderBottom(1).PaddingVertical(5).Text("Status").SemiBold();
+                                header.Cell().BorderBottom(1).PaddingVertical(5).Text("Talon").SemiBold();
+                                header.Cell().BorderBottom(1).PaddingVertical(5).Text("Birou").SemiBold();
+                            });
+
+                            foreach (var ticket in OnHoldTickets)
+                            {
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text("În așteptare");
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Talon);
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Room);
+                            }
+
+                            foreach (var ticket in ReadyTickets)
+                            {
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text("Pregătit");
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Talon);
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Room);
+                            }
+                        });
+                    });
+                });
+
+                await using var stream = await file.OpenWriteAsync();
+                document.GeneratePdf(stream);
             }
-
-            foreach (var ticket in ReadyTickets)
+            catch (Exception ex)
             {
-                await writer.WriteLineAsync($"Ready for service,{ticket.Talon},{ticket.Room}");
+                Console.WriteLine($"Eroare la exportul PDF: {ex.Message}");
             }
         }
 

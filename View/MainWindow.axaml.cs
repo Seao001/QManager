@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Input;
 using QManager.Service;
 
 namespace QManager.View
@@ -17,6 +18,8 @@ namespace QManager.View
         public MainWindow()
         {
             AvaloniaXamlLoader.Load(this);
+            this.SystemDecorations = SystemDecorations.None;
+            this.WindowState = WindowState.FullScreen;
             ResolveControls();
             AttachViewNavigation();
 
@@ -41,7 +44,16 @@ namespace QManager.View
 
         private void AttachViewNavigation()
         {
-            // Navigation events from child views if needed
+
+            _menuBackdrop.Click += HideMenu_Click;
+
+            _mainContentPresenter.PointerPressed += (s, e) => 
+            { 
+                if (_menuPanel.IsVisible) HideMenu(); 
+                
+                // Forțează pierderea focusului (blur) de pe orice TextBox activ
+                this.Focus();
+            };
         }
 
         private void OnNavigationRequested(object? sender, NavigationRequestEventArgs e)
@@ -65,12 +77,14 @@ namespace QManager.View
                     SessionState.SignOut();
                     WindowNavigator.Open<LoginWindow>(this);
                     break;
+                case "Exit":
+                    this.Close();
+                    break;
             }
         }
 
         private void SetMainContent(UserControl view)
         {
-            // Subscriem la evenimentele de navigare ale noii pagini dacă există
             if (view is DashboardView dv) dv.NavigationRequested += OnNavigationRequested;
             if (view is TalonView tv) tv.NavigationRequested += OnNavigationRequested;
             if (view is SettingsView sv) sv.NavigationRequested += OnNavigationRequested;
@@ -95,9 +109,16 @@ namespace QManager.View
 
         private void HideMenu_Click(object? sender, RoutedEventArgs e) => HideMenu();
 
+        private void MenuPanel_PointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            // Prevenim închiderea meniului când se dă click direct pe el (Handled = true)
+            e.Handled = true;
+        }
+
         private void OpenBank_Click(object? sender, RoutedEventArgs e) => SetMainContent(new BankView());
         private void OpenTalon_Click(object? sender, RoutedEventArgs e) => SetMainContent(new TalonView());
         private void OpenDashboard_Click(object? sender, RoutedEventArgs e) => SetMainContent(new DashboardView());
         private void OpenSettings_Click(object? sender, RoutedEventArgs e) => SetMainContent(new SettingsView());
+        private void ExitApp_Click(object? sender, RoutedEventArgs e) => this.Close();
     }
 }

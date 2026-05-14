@@ -1,6 +1,8 @@
 using Avalonia.Controls;
 using System;
 using Avalonia.Interactivity;
+using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Markup.Xaml;
 using QManager.DB.Repositories;
 using QManager.Models;
@@ -57,6 +59,16 @@ namespace QManager.View
             _ticketRepository.AddTicket(ticket);
             TicketState.Instance.AddTicket(talon, room);
             _statusTextBlock.Text = $"Added talon {talon} for room {room}.";
+        }
+
+        private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            // Dacă s-a dat click pe fundal sau pe un element care nu este TextBox,
+            // forțăm UserControl-ul să ia focusul, făcând TextBox-ul să piardă focusul (blur).
+            if (e.Source is not TextBox)
+            {
+                this.Focus();
+            }
         }
     }
 }

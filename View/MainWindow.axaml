@@ -9,20 +9,20 @@
         MinHeight="660"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        Background="#EDEAE3">
+        Background="{DynamicResource WindowBgBrush}">
     <Window.Styles>
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
         </Style>
 
         <Style Selector="Button.menu">
             <Setter Property="Width" Value="190" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="Background" Value="#FBFAF6" />
-            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Padding" Value="14,10" />
             <Setter Property="FontSize" Value="16" />
@@ -30,47 +30,48 @@
         </Style>
 
         <Style Selector="Button.menu:disabled">
-            <Setter Property="Background" Value="#D9E2EC" />
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Background" Value="{DynamicResource NavBgBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="Opacity" Value="1" />
         </Style>
 
         <Style Selector="Button.action">
-            <Setter Property="Background" Value="#FBFAF6" />
-            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Padding" Value="16,10" />
             <Setter Property="FontSize" Value="15" />
         </Style>
 
         <Style Selector="TextBox.form">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="Padding" Value="10,8" />
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="CaretBrush" Value="#1F252B" />
+            <Setter Property="CaretBrush" Value="{DynamicResource MainTextBrush}" />
         </Style>
 
         <Style Selector="TextBox.form:focus">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="Foreground" Value="#1F252B" />
-            <Setter Property="CaretBrush" Value="#1F252B" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource MainTextBrush}" />
         </Style>
     </Window.Styles>
 
     <Border Margin="10"
-            Background="#F7F5EF"
-            BorderBrush="#2A3138"
+            Background="{DynamicResource MainBorderBgBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="2"
             CornerRadius="16">
         <Grid RowDefinitions="42,*">
             <Border Grid.Row="0"
-                    Background="#E4E0D7"
-                    BorderBrush="#2A3138"
+                    Background="{DynamicResource HeaderBgBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="0,0,0,2"
                     CornerRadius="16,16,0,0">
                 <Grid ColumnDefinitions="90,*,90">
@@ -79,9 +80,9 @@
                                 Orientation="Horizontal"
                                 VerticalAlignment="Center"
                                 Spacing="10">
-                        <Ellipse Width="10" Height="10" Stroke="#2A3138" StrokeThickness="2" />
-                        <Ellipse Width="10" Height="10" Stroke="#2A3138" StrokeThickness="2" />
-                        <Ellipse Width="10" Height="10" Stroke="#2A3138" StrokeThickness="2" />
+                        <Ellipse Width="10" Height="10" Stroke="{DynamicResource BorderBrush}" StrokeThickness="2" />
+                        <Ellipse Width="10" Height="10" Stroke="{DynamicResource BorderBrush}" StrokeThickness="2" />
+                        <Ellipse Width="10" Height="10" Stroke="{DynamicResource BorderBrush}" StrokeThickness="2" />
                     </StackPanel>
 
                     <TextBlock Grid.Column="1"
@@ -89,14 +90,14 @@
                                VerticalAlignment="Center"
                                FontSize="18"
                                FontWeight="SemiBold"
-                               Text="Bank" />
+                               Text="QManager" />
                 </Grid>
             </Border>
 
             <Grid Grid.Row="1" ColumnDefinitions="96,*">
                 <Border Grid.Column="0"
-                        Background="#F0ECE3"
-                        BorderBrush="#2A3138"
+                        Background="{DynamicResource NavBgBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="0,0,2,0" />
 
                 <Grid Grid.Column="0">
@@ -106,8 +107,8 @@
                             Margin="0,26,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
-                            Background="#FBFAF6"
-                            BorderBrush="#2A3138"
+                            Background="{DynamicResource PanelBgBrush}"
+                            BorderBrush="{DynamicResource BorderBrush}"
                             BorderThickness="1.5"
                             CornerRadius="18"
                             Padding="0"
@@ -115,21 +116,22 @@
                             Click="ToggleMenu_Click">
                         <StackPanel
                               VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
                               Spacing="5"
                               Width="34"
                               Height="34">
                             <Border
                                     Height="4"
                                     CornerRadius="2"
-                                    Background="#2A3138" />
+                                    Background="{DynamicResource BorderBrush}" />
                             <Border
                                     Height="4"
                                     CornerRadius="2"
-                                    Background="#2A3138" />
+                                    Background="{DynamicResource BorderBrush}" />
                             <Border
                                     Height="4"
                                     CornerRadius="2"
-                                    Background="#2A3138"
+                                    Background="{DynamicResource BorderBrush}"
                                     />
                         </StackPanel>
                     </Button>
@@ -137,8 +139,8 @@
 
                 <Border Grid.Column="1"
                         Margin="26"
-                        Background="#FBFAF6"
-                        BorderBrush="#2A3138"
+                        Background="{DynamicResource PanelBgBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="2"
                         CornerRadius="10">
                     <TransitioningContentControl x:Name="MainContentPresenter"
@@ -165,11 +167,12 @@
                         Margin="20,20,0,20"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
-                        Background="#F7F5EF"
-                        BorderBrush="#2A3138"
+                        Background="{DynamicResource MainBorderBgBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="2"
                         CornerRadius="14"
                         IsVisible="False"
+                        PointerPressed="MenuPanel_PointerPressed"
                         ZIndex="30">
                     <Grid RowDefinitions="Auto,*,Auto" Margin="18">
                         <StackPanel Spacing="8">
@@ -177,7 +180,7 @@
                                        FontSize="18"
                                        FontWeight="SemiBold"
                                        Text="Admin Name" />
-                            <TextBlock Foreground="#5E6872"
+                            <TextBlock Foreground="{DynamicResource SubTextBrush}"
                                        Text="Navigation" />
                         </StackPanel>
 
@@ -198,9 +201,10 @@
                                     Click="OpenSettings_Click" />
                         </StackPanel>
 
-                        <TextBlock Grid.Row="2"
-                                   Foreground="#5E6872"
-                                   Text="Select a page to navigate." />
+                    <Button Grid.Row="2"
+                            Classes="menu"
+                            Content="Exit"
+                            Click="ExitApp_Click" />
                     </Grid>
                 </Border>
             </Grid>

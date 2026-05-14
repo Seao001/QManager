@@ -20,29 +20,29 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = QManager
-build_property.ProjectDir = c:\Users\User\Documents\QManager\
+build_property.ProjectDir = C:\Users\User\Documents\QManager\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[c:/Users/User/Documents/QManager/App.axaml]
+[C:/Users/User/Documents/QManager/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/User/Documents/QManager/View/BankView.axaml]
+[C:/Users/User/Documents/QManager/View/BankView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/User/Documents/QManager/View/dashboard.axaml]
+[C:/Users/User/Documents/QManager/View/dashboard.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/User/Documents/QManager/View/LoginWindow.axaml]
+[C:/Users/User/Documents/QManager/View/LoginWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/User/Documents/QManager/View/MainWindow.axaml]
+[C:/Users/User/Documents/QManager/View/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/User/Documents/QManager/View/SettingsWindow.axaml]
+[C:/Users/User/Documents/QManager/View/SettingsWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[c:/Users/User/Documents/QManager/View/TalonWindow.axaml]
+[C:/Users/User/Documents/QManager/View/TalonWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

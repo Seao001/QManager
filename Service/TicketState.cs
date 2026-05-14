@@ -47,6 +47,19 @@ namespace QManager.Service
             }
         }
 
+        public void MoveToOnHold(TicketViewModel ticket)
+        {
+            if (ticket is null)
+            {
+                return;
+            }
+
+            if (ReadyTickets.Remove(ticket))
+            {
+                OnHoldTickets.Add(ticket);
+            }
+        }
+
         private void InitializeDemoData()
         {
             OnHoldTickets.Add(new TicketViewModel("A11", "03"));

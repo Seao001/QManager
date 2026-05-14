@@ -4,96 +4,105 @@
              Background="Transparent">
     <UserControl.Styles>
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="#22262B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
         </Style>
 
         <Style Selector="Button.nav">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#22262B" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Padding" Value="14,7" />
-            <Setter Property="Foreground" Value="#22262B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Button.nav:focus">
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         </Style>
     </UserControl.Styles>
 
     <Grid>
-        <Grid Margin="26,18,26,18" RowDefinitions="Auto,Auto,Auto,*,Auto">
-                        <Grid ColumnDefinitions="Auto,220,*,Auto" VerticalAlignment="Top">
-                            <Button Classes="nav"
-                                    Content="Change AdminName"
-                                    HorizontalAlignment="Left"
-                                    Click="ChangeAdminName_Click" />
+        <Grid Margin="26,18,26,18" RowDefinitions="Auto,*,Auto,Auto">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
 
-                            <Border Grid.Column="1"
-                                    Margin="24,0,24,0"
-                                    Height="42"
-                                    CornerRadius="21"
-                                    BorderBrush="#22262B"
-                                    BorderThickness="1.5"
-                                    Background="#FFFFFF">
-                                <TextBlock HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Text="Admin Name" />
-                            </Border>
+                <Button Grid.Column="1"
+                        Classes="nav"
+                        Content="Change AdminName"
+                        HorizontalAlignment="Center"
+                        CornerRadius="12"
+                        Click="ChangeAdminName_Click" />
 
-                            <Border Grid.Column="3"
-                                    Width="58"
-                                    Height="58"
-                                    CornerRadius="29"
-                                    BorderBrush="#22262B"
-                                    BorderThickness="1.5"
-                                    Background="#FFFFFF">
-                                <TextBlock HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           FontSize="28"
-                                           Text="O" />
-                            </Border>
-                        </Grid>
-
-                        <Button Grid.Row="1"
-                                Classes="nav"
-                                Width="210"
-                                Margin="0,16,0,0"
-                                HorizontalAlignment="Center"
-                                Content="Change Photo"
-                                Click="ChangePhoto_Click" />
-
-                        <StackPanel Grid.Row="2"
-                                    Margin="0,34,0,0"
-                                    HorizontalAlignment="Center"
-                                    Spacing="22">
-                            <Button Classes="nav" Width="340" Content="Change Password" Click="ChangePassword_Click" />
-                            <Button Classes="nav" Width="340" Content="Change Language" Click="ChangeLanguage_Click" />
-                            <Button Classes="nav" Width="340" Content="About us" Click="AboutUs_Click" />
-                        </StackPanel>
-
-                        <TextBlock x:Name="SettingsStatusText"
-                                   Grid.Row="3"
-                                   HorizontalAlignment="Center"
+                <!-- Admin Name + Avatar Oval (Right) -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Border Height="42"
+                            Padding="16,0"
+                            CornerRadius="12"
+                            BorderBrush="{DynamicResource BorderBrush}"
+                            BorderThickness="1.5"
+                            Background="{DynamicResource PanelBgBrush}">
+                        <TextBlock VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Text="Admin Name" />
+                    </Border>
+                    <Border Width="48"
+                            Height="48"
+                            CornerRadius="24"
+                            BorderBrush="{DynamicResource BorderBrush}"
+                            BorderThickness="1.5"
+                            Background="{DynamicResource PanelBgBrush}">
+                        <TextBlock HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   TextAlignment="Center"
-                                   Foreground="#5E6872"
-                                   TextWrapping="Wrap" />
+                                   FontSize="20"
+                                   Text="A" />
+                    </Border>
+                </StackPanel>
+            </Grid>
 
-                        <Grid Grid.Row="4"
-                              Margin="0,18,0,0"
-                              ColumnDefinitions="*,Auto,Auto,Auto">
-                            <Button Grid.Column="1"
-                                    Classes="nav"
-                                    Width="180"
-                                    Content="Sign Out"
-                                    Click="SignOut_Click" />
+            <!-- Central Area -->
+            <StackPanel Grid.Row="1"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Spacing="22">
+                <Button Classes="nav" Width="480" Height="54" CornerRadius="12" FontSize="18" Content="Change Password" Click="ChangePassword_Click" />
+                <Button Classes="nav" Width="480" Height="54" CornerRadius="12" FontSize="18" Content="Change Language" Click="ChangeLanguage_Click" />
+                <Button Classes="nav" Width="480" Height="54" CornerRadius="12" FontSize="18" Content="About us" Click="AboutUs_Click" />
+                
+                <TextBlock x:Name="SettingsStatusText"
+                           Margin="0,10,0,0"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource SubTextBrush}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
 
-                            <Border Grid.Column="2" Width="36" />
+            <!-- Separator Line (Dotted) -->
+            <Rectangle Grid.Row="2" 
+                       Height="1.5" 
+                       Margin="0,20"
+                       Fill="Transparent" 
+                       Stroke="{DynamicResource BorderBrush}" 
+                       StrokeDashArray="4,4" 
+                       StrokeThickness="1.5" />
 
-                            <ToggleSwitch Grid.Column="3"
-                                          Width="140"
-                                          HorizontalAlignment="Right"
-                                          IsChecked="{Binding IsDarkMode}"
-                                          Content="Dark/Light Mode" />
-                        </Grid>
+            <!-- Footer -->
+            <Grid Grid.Row="3" ColumnDefinitions="*,Auto,*">
+                <Button Grid.Column="1"
+                        Classes="nav"
+                        Width="200"
+                        Height="48"
+                        CornerRadius="24"
+                        Content="Sign Out"
+                        Click="SignOut_Click" />
+
+                <ToggleSwitch Grid.Column="2"
+                              HorizontalAlignment="Right"
+                              IsChecked="{Binding IsDarkMode}"
+                              Content="Dark/Light Mode" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

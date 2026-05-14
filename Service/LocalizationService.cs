@@ -33,7 +33,8 @@ namespace QManager.Service
                 ["OperatorPanel"] = "Panou Operator",
                 ["CurrentClient"] = "Client curent:",
                 ["NextClient"] = "URMATORUL CLIENT",
-                ["SystemSettings"] = "Setari Sistem"
+                ["SystemSettings"] = "Setari Sistem",
+                ["ExitApp"] = "Ieșire"
             },
             [AppLanguage.English] = new Dictionary<string, string>
             {
@@ -53,7 +54,8 @@ namespace QManager.Service
                 ["OperatorPanel"] = "Operator Panel",
                 ["CurrentClient"] = "Current client:",
                 ["NextClient"] = "NEXT CLIENT",
-                ["SystemSettings"] = "System Settings"
+                ["SystemSettings"] = "System Settings",
+                ["ExitApp"] = "Exit"
             }
         };
 

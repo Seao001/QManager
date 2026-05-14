@@ -1,25 +1,25 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="QManager.View.TalonView"
-             Background="Transparent">
+             Background="{DynamicResource WindowBgBrush}">
     <UserControl.Styles>
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="#22262B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
         </Style>
 
         <Style Selector="Button.nav">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#22262B" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Padding" Value="14,7" />
-            <Setter Property="Foreground" Value="#22262B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
         </Style>
 
         <Style Selector="Border.ticket">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#22262B" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
             <Setter Property="Padding" Value="0" />
         </Style>
@@ -27,17 +27,27 @@
 
     <Grid>
         <Border Margin="24,16,24,16"
-                            Background="#FBFBF8"
-                            BorderBrush="#22262B"
+                            Background="{DynamicResource MainBorderBgBrush}"
+                            BorderBrush="{DynamicResource BorderBrush}"
                             BorderThickness="2">
-            <Grid Margin="18,14,18,18" RowDefinitions="Auto,*">
-                            <Grid ColumnDefinitions="*,1,*" Margin="12,0,12,8">
+            <Grid Margin="18,14,18,18" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,*,*">
+                    <TextBlock x:Name="RealTimeClock"
+                               Grid.Row="0"
+                               Grid.Column="2"
+                               FontSize="46"
+                               FontWeight="Medium"
+                               Foreground="#1F252B"
+                               VerticalAlignment="Center"
+                               Margin="0,0,20,0"
+                               HorizontalAlignment="Right"/>
+
+                            <Grid Grid.Row="1" Grid.ColumnSpan="3" ColumnDefinitions="*,1,*" Margin="12,0,12,8">
                                 <TextBlock FontSize="30"
                                            HorizontalAlignment="Center"
                                            Text="On hold" />
                                 <Border Grid.Column="1"
                                         Width="1"
-                                        Background="#22262B"
+                                        Background="{DynamicResource BorderBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Stretch" />
                                 <TextBlock Grid.Column="2"
@@ -46,12 +56,12 @@
                                            Text="Ready for service" />
                             </Grid>
 
-                            <Grid Grid.Row="1" ColumnDefinitions="*,1,*">
+                            <Grid Grid.Row="2" Grid.ColumnSpan="3" ColumnDefinitions="*,1,*">
                                 <Border Grid.Column="1"
-                                        Background="#22262B"
+                                        Background="{DynamicResource BorderBrush}"
                                         Width="1"
                                         Margin="0,0,0,0"
-                                        BorderBrush="#22262B"
+                                        BorderBrush="{DynamicResource BorderBrush}"
                                         BorderThickness="0" />
 
                                 <ScrollViewer Grid.Column="0" Margin="0,0,12,0">
@@ -70,7 +80,7 @@
                                                                    FontSize="13"
                                                                    Text="Talon" />
                                                         <Border Grid.Row="1"
-                                                                BorderBrush="#22262B"
+                                                                BorderBrush="{DynamicResource BorderBrush}"
                                                                 BorderThickness="0,1.5,0,1.5">
                                                             <TextBlock HorizontalAlignment="Center"
                                                                        VerticalAlignment="Center"
@@ -104,7 +114,7 @@
                                                                    FontSize="13"
                                                                    Text="Talon" />
                                                         <Border Grid.Row="1"
-                                                                BorderBrush="#22262B"
+                                                                BorderBrush="{DynamicResource BorderBrush}"
                                                                 BorderThickness="0,1.5,0,1.5">
                                                             <TextBlock HorizontalAlignment="Center"
                                                                        VerticalAlignment="Center"

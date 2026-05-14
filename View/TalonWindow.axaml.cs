@@ -1,18 +1,18 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using QManager.Service;
+using Avalonia.Threading; // Adăugat pentru DispatcherTimer
 
 namespace QManager.View
 {
-    public partial class TalonView : UserControl, INotifyPropertyChanged
+    public partial class TalonView : UserControl
     {
-        public new event PropertyChangedEventHandler? PropertyChanged;
+        private TextBlock _realTimeClock = null!; // Adăugat pentru ceas
 
         public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;
         private readonly TicketState _ticketState = TicketState.Instance;
@@ -23,12 +23,36 @@ namespace QManager.View
         public TalonView()
         {
             AvaloniaXamlLoader.Load(this);
+            ResolveControls(); // Adăugat pentru a găsi controalele
+            InitializeRealTimeClock(); // Adăugat pentru a porni ceasul
             DataContext = this;
         }
 
-        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        private void ResolveControls()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _realTimeClock = GetRequiredControl<TextBlock>("RealTimeClock");
+        }
+
+        // Metodă helper pentru a găsi controale, preluată din alte View-uri
+        private T GetRequiredControl<T>(string name) where T : Control =>
+            this.FindControl<T>(name) ?? throw new InvalidOperationException($"{typeof(T).Name} '{name}' was not found in the XAML.");
+
+        private void InitializeRealTimeClock()
+        {
+            // Setăm ora inițială imediat
+            _realTimeClock.Text = DateTime.Now.ToString("HH:mm:ss");
+
+            // Creăm un timer care rulează la fiecare secundă
+            var timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+
+            timer.Tick += (s, e) =>
+            {
+                _realTimeClock.Text = DateTime.Now.ToString("HH:mm:ss");
+            };
+            timer.Start();
         }
     }
 }

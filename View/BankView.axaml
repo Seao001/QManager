@@ -1,24 +1,15 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="QManager.View.BankView"
-             Background="#FBFAF6">
-    <Border Background="#FBFAF6"
-            BorderBrush="#2A3138"
+             Background="{DynamicResource WindowBgBrush}"
+             Focusable="True"
+             PointerPressed="OnPointerPressed">
+    <Border Background="{DynamicResource MainBorderBgBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="2"
             CornerRadius="10"
             Margin="0">
         <Grid Margin="34" RowDefinitions="Auto,Auto,Auto,*">
-            <TextBlock FontSize="34"
-                       FontWeight="SemiBold"
-                       Text="Coupon Generation"
-                       HorizontalAlignment="Center" />
-
-            <TextBlock Grid.Row="1"
-                       Margin="0,8,0,0"
-                       FontSize="16"
-                       Foreground="#5E6872"
-                       Text="Create a new talon for a client and assign it to a room."
-                       HorizontalAlignment="Center" />
 
             <Grid Grid.Row="2"
                   Margin="0,40,0,0"
@@ -38,7 +29,7 @@
                 <Border Grid.Column="1"
                         Width="2"
                         Margin="17,8"
-                        Background="#B4BCC4"
+                        Background="{DynamicResource SubTextBrush}"
                         HorizontalAlignment="Center" />
 
                 <StackPanel Grid.Column="2" Spacing="10">
@@ -47,8 +38,6 @@
                              Classes="form"
                              Height="42"
                              Watermark="Ex: 03" />
-                    <TextBlock Foreground="#5E6872"
-                               Text="Room number will appear in dashboard and casier cards." />
                 </StackPanel>
             </Grid>
 
@@ -63,7 +52,7 @@
                 <TextBlock x:Name="StatusTextBlock"
                            HorizontalAlignment="Center"
                            TextAlignment="Center"
-                           Foreground="#5E6872"
+                           Foreground="{DynamicResource MainTextBrush}"
                            TextWrapping="Wrap" />
             </StackPanel>
         </Grid>

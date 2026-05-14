@@ -6,11 +6,41 @@
 
     <Application.Styles>
         <FluentTheme />
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="WindowBgBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="MainBorderBgBrush" Color="#F8F8F8"/>
+                    <SolidColorBrush x:Key="HeaderBgBrush" Color="#F0F0F0"/>
+                    <SolidColorBrush x:Key="NavBgBrush" Color="#F5F5F5"/>
+                    <SolidColorBrush x:Key="PanelBgBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="MainTextBrush" Color="#212121"/>
+                    <SolidColorBrush x:Key="SubTextBrush" Color="#616161"/>
+                    <SolidColorBrush x:Key="BorderBrush" Color="#424242"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="WindowBgBrush" Color="#1A1A2E"/>
+                    <SolidColorBrush x:Key="MainBorderBgBrush" Color="#20203A"/>
+                    <SolidColorBrush x:Key="HeaderBgBrush" Color="#2C2C4A"/>
+                    <SolidColorBrush x:Key="NavBgBrush" Color="#34345C"/>
+                    <SolidColorBrush x:Key="PanelBgBrush" Color="#3E3E6F"/>
+                    <SolidColorBrush x:Key="MainTextBrush" Color="#E0E0E0"/>
+                    <SolidColorBrush x:Key="SubTextBrush" Color="#A0A0C0"/>
+                    <SolidColorBrush x:Key="BorderBrush" Color="#707090"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
         <Style Selector="Button">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#222" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="Foreground" Value="#111" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Padding" Value="12,6" />
             <Setter Property="Template">
@@ -18,24 +48,22 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            TextElement.Foreground="{TemplateBinding Foreground}">
+                            CornerRadius="{TemplateBinding CornerRadius}">
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
-                                          Foreground="{TemplateBinding Foreground}"
                                           TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Border>
                 </ControlTemplate>
             </Setter>
         </Style>
         <Style Selector="Button.plain-button">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="#222" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="Foreground" Value="#111" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Padding" Value="12,6" />
             <Setter Property="Template">
@@ -43,28 +71,26 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            TextElement.Foreground="{TemplateBinding Foreground}">
+                            CornerRadius="{TemplateBinding CornerRadius}">
                         <ContentPresenter Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
-                                          Foreground="{TemplateBinding Foreground}"
                                           TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Border>
                 </ControlTemplate>
             </Setter>
         </Style>
         <Style Selector="Button.plain-button:pointerover">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="#222" />
-            <Setter Property="Foreground" Value="#111" />
+            <Setter Property="Background" Value="{DynamicResource NavBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
         </Style>
         <Style Selector="Button.plain-button:pressed">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="#222" />
-            <Setter Property="Foreground" Value="#111" />
+            <Setter Property="Background" Value="{DynamicResource HeaderBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
         </Style>
     </Application.Styles>
 </Application>

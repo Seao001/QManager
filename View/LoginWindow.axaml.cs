@@ -27,6 +27,8 @@ namespace QManager.View
         public LoginWindow()
         {
             AvaloniaXamlLoader.Load(this);
+            this.SystemDecorations = SystemDecorations.None;
+            this.WindowState = WindowState.FullScreen;
             ResolveControls();
 
             _viewModel.LoginSucceeded += OnLoginSucceeded;

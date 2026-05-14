@@ -1,20 +1,20 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="QManager.View.DashboardView"
-             Background="Transparent">
+             Background="{DynamicResource WindowBgBrush}">
     <UserControl.Styles>
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="FontFamily" Value="Segoe UI" />
         </Style>
 
         <Style Selector="Button.menu">
             <Setter Property="Width" Value="190" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="Background" Value="#FBFAF6" />
-            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Padding" Value="14,10" />
             <Setter Property="FontSize" Value="16" />
@@ -22,15 +22,15 @@
         </Style>
 
         <Style Selector="Button.menu:disabled">
-            <Setter Property="Background" Value="#D9E2EC" />
+            <Setter Property="Background" Value="{DynamicResource NavBgBrush}" />
             <Setter Property="Opacity" Value="1" />
         </Style>
 
         <Style Selector="Button.action">
-            <Setter Property="Background" Value="#FBFAF6" />
-            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
-            <Setter Property="Foreground" Value="#1F252B" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Padding" Value="14,8" />
         </Style>
@@ -42,8 +42,8 @@
             <Setter Property="Padding" Value="0" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.8" />
             <Setter Property="CornerRadius" Value="0" />
         </Style>
@@ -52,8 +52,8 @@
             <Setter Property="Width" Value="136" />
             <Setter Property="Height" Value="122" />
             <Setter Property="Margin" Value="0,0,14,16" />
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#2A3138" />
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.8" />
         </Style>
     </UserControl.Styles>
@@ -65,7 +65,7 @@
                                            FontWeight="SemiBold"
                                            Text="{Binding WaitingNowText}" />
                                 <TextBlock Margin="0,4,0,0"
-                                           Foreground="#5E6872"
+                                           Foreground="{DynamicResource SubTextBrush}"
                                            Text="{Binding AverageWaitText}" />
                             </StackPanel>
 
@@ -107,7 +107,7 @@
                                                                    FontSize="14"
                                                                    Text="Talon" />
                                                         <Border Grid.Row="1"
-                                                                BorderBrush="#2A3138"
+                                                                BorderBrush="{DynamicResource BorderBrush}"
                                                                 BorderThickness="0,1.5,0,1.5">
                                                             <TextBlock HorizontalAlignment="Center"
                                                                        VerticalAlignment="Center"
@@ -127,7 +127,7 @@
                             </StackPanel>
 
                             <Border Grid.Column="1"
-                                    Background="#2A3138"
+                                    Background="{DynamicResource BorderBrush}"
                                     Margin="0,12" />
 
                             <StackPanel Grid.Column="2"
@@ -147,14 +147,16 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Classes="ticket">
+                                                <Button Classes="ticket"
+                                                        Tag="{Binding}"
+                                                        Click="MoveToOnHold_Click">
                                                     <Grid RowDefinitions="28,34,1,*">
                                                         <TextBlock Margin="8,0"
                                                                    VerticalAlignment="Center"
                                                                    FontSize="14"
                                                                    Text="Talon" />
                                                         <Border Grid.Row="1"
-                                                                BorderBrush="#2A3138"
+                                                                BorderBrush="{DynamicResource BorderBrush}"
                                                                 BorderThickness="0,1.5,0,1.5">
                                                             <TextBlock HorizontalAlignment="Center"
                                                                        VerticalAlignment="Center"
@@ -166,7 +168,7 @@
                                                                    FontSize="14"
                                                                    Text="{Binding RoomLabel}" />
                                                     </Grid>
-                                                </Border>
+                                                </Button>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>

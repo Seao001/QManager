@@ -33,6 +33,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\Micro
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\mscorlib.dll
 C:\Users\User\.nuget\packages\mysql.data\9.7.0\lib\net10.0\MySql.Data.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\netstandard.dll
+C:\Users\User\.nuget\packages\questpdf\2026.5.0\lib\net10.0\QuestPDF.dll
 C:\Users\User\.nuget\packages\skiasharp\2.88.7\lib\net6.0\SkiaSharp.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\System.AppContext.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\System.Buffers.dll
@@ -198,6 +199,6 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\Syste
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\System.Xml.XmlSerializer.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\System.Xml.XPath.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\System.Xml.XPath.XDocument.dll
-C:\Users\User\.nuget\packages\tmds.dbus.protocol\0.15.0\lib\net6.0\Tmds.DBus.Protocol.dll
+C:\Users\User\.nuget\packages\tmds.dbus.protocol\0.19.0\lib\net8.0\Tmds.DBus.Protocol.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.8\ref\net10.0\WindowsBase.dll
 C:\Users\User\.nuget\packages\zstdsharp.port\0.8.6\lib\net9.0\ZstdSharp.dll
