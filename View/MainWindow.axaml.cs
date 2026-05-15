@@ -33,7 +33,7 @@ namespace QManager.View
             SessionState.UsernameChanged += (s, e) => UpdateMenuUserText();
             SessionState.ProfilePhotoChanged += (s, e) => UpdateMenuAvatar(); // Adăugat: Abonează-te la schimbările fotografiei de profil
 
-            SetMainContent(new DashboardView());
+            SetMainContent(new TalonView());
             HideMenu();
         }
 
@@ -91,7 +91,7 @@ namespace QManager.View
             switch (e.Target)
             {
                 case "Bank":
-                    SetMainContent(new DashboardView());
+                    SetMainContent(new TalonView());
                     break;
                 case "Casier":
                 case "Talon":
@@ -133,6 +133,7 @@ namespace QManager.View
             // Dezlipim evenimentele de pe view-ul vechi pentru a evita memory leaks
             if (_currentContentView != null)
             {
+                if (_currentContentView is MainView mv) mv.NavigationRequested -= OnNavigationRequested;
                 if (_currentContentView is SettingsView sv) sv.NavigationRequested -= OnNavigationRequested;
                 if (_currentContentView is DisplayView dsv) dsv.NavigationRequested -= OnNavigationRequested;
                 if (_currentContentView is PasswordChangeView pcv) pcv.NavigationRequested -= OnNavigationRequested;
@@ -146,6 +147,7 @@ namespace QManager.View
             _currentContentView = view;
 
             // Abonăm noul view la sistemul de navigare
+            if (_currentContentView is MainView nmv) nmv.NavigationRequested += OnNavigationRequested;
             if (_currentContentView is SettingsView nsv) nsv.NavigationRequested += OnNavigationRequested;
             if (_currentContentView is DisplayView ndsv) ndsv.NavigationRequested += OnNavigationRequested;
             if (_currentContentView is PasswordChangeView npcv) npcv.NavigationRequested += OnNavigationRequested;
@@ -180,7 +182,7 @@ namespace QManager.View
             e.Handled = true;
         }
 
-        private void OpenBank_Click(object? sender, RoutedEventArgs e) => SetMainContent(new DashboardView());
+        private void OpenBank_Click(object? sender, RoutedEventArgs e) => SetMainContent(new TalonView());
         private void OpenTalon_Click(object? sender, RoutedEventArgs e) => SetMainContent(new BankView());
         private void OpenDashboard_Click(object? sender, RoutedEventArgs e) => SetMainContent(new DashboardView());
         private void OpenSettings_Click(object? sender, RoutedEventArgs e) => SetMainContent(new SettingsView());

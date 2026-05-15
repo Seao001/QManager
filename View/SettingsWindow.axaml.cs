@@ -12,6 +12,7 @@ namespace QManager.View
     public partial class SettingsView : UserControl
     {
         private TextBlock _settingsStatusText = null!;
+
         private TextBlock _currentAdminNameText = null!;
 
         public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;

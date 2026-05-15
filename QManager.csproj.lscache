@@ -55,6 +55,7 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
+ada.cs
 App.axaml.cs
 DB/
  DbConnection.cs
@@ -87,6 +88,7 @@ View/
  DisplayWindow.axaml.cs
  LanguageSelectionView.axaml.cs
  LoginWindow.axaml.cs
+ MainView.axaml.cs
  MainWindow.axaml.cs
  NavigationRequestEventArgs.cs
  PasswordChangeView.axaml.cs
@@ -345,6 +347,7 @@ View/
  DisplayWindow.axaml
  LanguageSelectionView.axaml
  LoginWindow.axaml
+ MainView.axaml
  MainWindow.axaml
  PasswordChangeView.axaml
  SettingsWindow.axaml
