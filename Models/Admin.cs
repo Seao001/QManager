@@ -12,6 +12,7 @@ namespace QManager.Models
         public string PasswordHash { get; set; } = string.Empty;
         public UserTheme Theme { get; set; } = UserTheme.Light;
         public string Language { get; set; } = "RO";
+        public string ProfilePhotoPath { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
+using Avalonia.Threading;
 using QManager.Service;
 
 namespace QManager.View
@@ -13,7 +14,9 @@ namespace QManager.View
         private Border _menuPanel = null!;
         private Button _menuBackdrop = null!;
         private TextBlock _menuUserText = null!;
+        private Image _menuAvatarImage = null!; // Adăugat: Controlul Image pentru avatarul din meniu
         private TransitioningContentControl _mainContentPresenter = null!;
+        private UserControl? _currentContentView;
 
         public MainWindow()
         {
@@ -23,12 +26,39 @@ namespace QManager.View
             ResolveControls();
             AttachViewNavigation();
 
-            _menuUserText.Text = string.IsNullOrWhiteSpace(SessionState.Username)
-                ? "Admin Name"
-                : SessionState.Username;
+            this.DataContext = this;
+            UpdateMenuUserText();
+            UpdateMenuAvatar(); // Adăugat: Actualizează avatarul la pornire
+            LocalizationService.Instance.LanguageChanged += (s, e) => UpdateMenuUserText();
+            SessionState.UsernameChanged += (s, e) => UpdateMenuUserText();
+            SessionState.ProfilePhotoChanged += (s, e) => UpdateMenuAvatar(); // Adăugat: Abonează-te la schimbările fotografiei de profil
 
-            SetMainContent(new BankView());
+            SetMainContent(new DashboardView());
             HideMenu();
+        }
+
+        private void UpdateMenuUserText()
+        {
+            _menuUserText.Text = string.IsNullOrWhiteSpace(SessionState.Username)
+                ? LocalizationService.Instance["AdminName"]
+                : SessionState.Username;
+        }
+
+        private void UpdateMenuAvatar() // Adăugat: Metodă pentru a actualiza imaginea avatarului din meniu
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                var path = SessionState.ProfilePhotoPath;
+                if (!string.IsNullOrEmpty(path) && System.IO.File.Exists(path))
+                {
+                    try { _menuAvatarImage.Source = new Avalonia.Media.Imaging.Bitmap(path); }
+                    catch { _menuAvatarImage.Source = null; }
+                }
+                else
+                {
+                    _menuAvatarImage.Source = null;
+                }
+            });
         }
 
         private void ResolveControls()
@@ -37,6 +67,7 @@ namespace QManager.View
             _menuBackdrop = GetRequiredControl<Button>("MenuBackdrop");
             _mainContentPresenter = GetRequiredControl<TransitioningContentControl>("MainContentPresenter");
             _menuUserText = GetRequiredControl<TextBlock>("MenuUserText");
+            _menuAvatarImage = GetRequiredControl<Image>("MenuAvatarImage"); // Adăugat: Rezolvă noul control Image
         }
 
         private T GetRequiredControl<T>(string name) where T : Control =>
@@ -44,7 +75,6 @@ namespace QManager.View
 
         private void AttachViewNavigation()
         {
-
             _menuBackdrop.Click += HideMenu_Click;
 
             _mainContentPresenter.PointerPressed += (s, e) => 
@@ -61,17 +91,32 @@ namespace QManager.View
             switch (e.Target)
             {
                 case "Bank":
-                    SetMainContent(new BankView());
+                    SetMainContent(new DashboardView());
                     break;
                 case "Casier":
                 case "Talon":
-                    SetMainContent(new TalonView());
+                    SetMainContent(new BankView());
                     break;
                 case "Dashboard":
                     SetMainContent(new DashboardView());
                     break;
                 case "Settings":
                     SetMainContent(new SettingsView());
+                    break;
+                case "LanguageSelection":
+                    SetMainContent(new LanguageSelectionView());
+                    break;
+                case "PasswordChange":
+                    SetMainContent(new PasswordChangeView());
+                    break;
+                case "Display":
+                    SetMainContent(new DisplayView());
+                    break;
+                case "ChangeName":
+                    SetMainContent(new ChangeAdminNameView());
+                    break;
+                case "ChangePhoto":
+                    SetMainContent(new ChangePhotoView());
                     break;
                 case "SignOut":
                     SessionState.SignOut();
@@ -85,10 +130,30 @@ namespace QManager.View
 
         private void SetMainContent(UserControl view)
         {
-            if (view is DashboardView dv) dv.NavigationRequested += OnNavigationRequested;
-            if (view is TalonView tv) tv.NavigationRequested += OnNavigationRequested;
-            if (view is SettingsView sv) sv.NavigationRequested += OnNavigationRequested;
-            if (view is BankView bv) { /* bv has no NavRequested in current code but could */ }
+            // Dezlipim evenimentele de pe view-ul vechi pentru a evita memory leaks
+            if (_currentContentView != null)
+            {
+                if (_currentContentView is SettingsView sv) sv.NavigationRequested -= OnNavigationRequested;
+                if (_currentContentView is DisplayView dsv) dsv.NavigationRequested -= OnNavigationRequested;
+                if (_currentContentView is PasswordChangeView pcv) pcv.NavigationRequested -= OnNavigationRequested;
+                if (_currentContentView is LanguageSelectionView lsv) lsv.NavigationRequested -= OnNavigationRequested;
+                if (_currentContentView is TalonView tv) tv.NavigationRequested -= OnNavigationRequested; // Unsubscribe TalonView
+                if (_currentContentView is BankView bv) bv.NavigationRequested -= OnNavigationRequested;
+                if (_currentContentView is ChangePhotoView cpv) cpv.NavigationRequested -= OnNavigationRequested;
+                if (_currentContentView is ChangeAdminNameView canv) canv.NavigationRequested -= OnNavigationRequested;
+            }
+
+            _currentContentView = view;
+
+            // Abonăm noul view la sistemul de navigare
+            if (_currentContentView is SettingsView nsv) nsv.NavigationRequested += OnNavigationRequested;
+            if (_currentContentView is DisplayView ndsv) ndsv.NavigationRequested += OnNavigationRequested;
+            if (_currentContentView is PasswordChangeView npcv) npcv.NavigationRequested += OnNavigationRequested;
+            if (_currentContentView is LanguageSelectionView nlsv) nlsv.NavigationRequested += OnNavigationRequested;
+            if (_currentContentView is TalonView ntv) ntv.NavigationRequested += OnNavigationRequested; // Subscribe TalonView
+            if (_currentContentView is BankView nbv) nbv.NavigationRequested += OnNavigationRequested;
+            if (_currentContentView is ChangePhotoView ncpv) ncpv.NavigationRequested += OnNavigationRequested;
+            if (_currentContentView is ChangeAdminNameView ncanv) ncanv.NavigationRequested += OnNavigationRequested;
 
             _mainContentPresenter.Content = view;
             HideMenu();
@@ -115,8 +180,8 @@ namespace QManager.View
             e.Handled = true;
         }
 
-        private void OpenBank_Click(object? sender, RoutedEventArgs e) => SetMainContent(new BankView());
-        private void OpenTalon_Click(object? sender, RoutedEventArgs e) => SetMainContent(new TalonView());
+        private void OpenBank_Click(object? sender, RoutedEventArgs e) => SetMainContent(new DashboardView());
+        private void OpenTalon_Click(object? sender, RoutedEventArgs e) => SetMainContent(new BankView());
         private void OpenDashboard_Click(object? sender, RoutedEventArgs e) => SetMainContent(new DashboardView());
         private void OpenSettings_Click(object? sender, RoutedEventArgs e) => SetMainContent(new SettingsView());
         private void ExitApp_Click(object? sender, RoutedEventArgs e) => this.Close();

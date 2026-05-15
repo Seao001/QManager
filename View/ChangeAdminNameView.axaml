@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svc="using:QManager.Service"
+             xmlns:vm="using:QManager.ViewModels"
+             x:Class="QManager.View.ChangeAdminNameView"
+             Background="Transparent">
+
+    <UserControl.Styles>
+        <Style Selector="Button.nav">
+            <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="14,7" />
+            <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid Margin="26,18,26,18">
+        <StackPanel Spacing="25" MaxWidth="400" HorizontalAlignment="Center" VerticalAlignment="Center">
+            
+            <TextBlock Text="{Binding [ChangeAdminName], Source={x:Static svc:LocalizationService.Instance}}"
+                       FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" 
+                       Foreground="{DynamicResource MainTextBrush}"/>
+
+            <StackPanel Spacing="10">
+                <TextBlock Text="{Binding [Username], Source={x:Static svc:LocalizationService.Instance}}" 
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource SubTextBrush}"/>
+                <TextBox Text="{Binding NewUsername}" 
+                         Height="50" CornerRadius="12" 
+                         VerticalContentAlignment="Center"
+                         BorderBrush="{DynamicResource BorderBrush}"
+                         Background="{DynamicResource PanelBgBrush}"/>
+            </StackPanel>
+
+            <StackPanel Spacing="10">
+                <TextBlock Text="{Binding [Password], Source={x:Static svc:LocalizationService.Instance}}" 
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource SubTextBrush}"/>
+                <TextBox Text="{Binding CurrentPassword}" 
+                         PasswordChar="*"
+                         Height="48" CornerRadius="24" 
+                         VerticalContentAlignment="Center"/>
+            </StackPanel>
+
+            <Button Classes="nav"
+                    Command="{Binding ApplyNameChangeCommand}"
+                    Content="{Binding [Update], Source={x:Static svc:LocalizationService.Instance}}"
+                    HorizontalAlignment="Stretch"
+                    Height="54"
+                    Background="{DynamicResource SystemAccentColor}"
+                    Foreground="White"
+                    BorderThickness="0" />
+
+            <TextBlock Text="{Binding StatusMessage}"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap"
+                       FontSize="14"
+                       />
+            <Button Classes="nav"
+                    Content="{Binding [Back], Source={x:Static svc:LocalizationService.Instance}}"
+                    Click="Back_Click"
+                    HorizontalAlignment="Center"
+                    Width="200"
+                    Height="48"
+                    CornerRadius="24" />
+        </StackPanel>
+    </Grid>
+</UserControl>

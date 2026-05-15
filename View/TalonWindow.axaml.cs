@@ -12,9 +12,10 @@ namespace QManager.View
 {
     public partial class TalonView : UserControl
     {
+        public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;
+
         private TextBlock _realTimeClock = null!; // Adăugat pentru ceas
 
-        public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;
         private readonly TicketState _ticketState = TicketState.Instance;
 
         public ObservableCollection<TicketViewModel> OnHoldTickets => _ticketState.OnHoldTickets;
@@ -24,6 +25,7 @@ namespace QManager.View
         {
             AvaloniaXamlLoader.Load(this);
             ResolveControls(); // Adăugat pentru a găsi controalele
+            _realTimeClock.Foreground = Avalonia.Media.Brushes.White; // Set the clock color to white
             InitializeRealTimeClock(); // Adăugat pentru a porni ceasul
             DataContext = this;
         }
@@ -53,6 +55,11 @@ namespace QManager.View
                 _realTimeClock.Text = DateTime.Now.ToString("HH:mm:ss");
             };
             timer.Start();
+        }
+
+        private void Back_Click(object? sender, RoutedEventArgs e)
+        {
+            NavigationRequested?.Invoke(this, new NavigationRequestEventArgs("Bank")); // Navigate back to BankView
         }
     }
 }

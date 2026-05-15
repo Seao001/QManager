@@ -20,7 +20,6 @@ namespace QManager.View
         private readonly TicketState _ticketState = TicketState.Instance;
 
         public new event PropertyChangedEventHandler? PropertyChanged;
-        public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;
 
         public ObservableCollection<TicketViewModel> OnHoldTickets => _ticketState.OnHoldTickets;
         public ObservableCollection<TicketViewModel> ReadyTickets => _ticketState.ReadyTickets;
@@ -81,7 +80,7 @@ namespace QManager.View
             var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
                 Title = "Exportă Raport PDF",
-                SuggestedFileName = $"raport-cozi-{DateTime.Now:yyyy-MM-dd-HHmm}.pdf",
+                SuggestedFileName = $"{LocalizationService.Instance["ReportFileName"]}-{DateTime.Now:yyyy-MM-dd-HHmm}.pdf",
                 DefaultExtension = "pdf",
                 FileTypeChoices = new[]
                 {
@@ -107,7 +106,7 @@ namespace QManager.View
                     container.Page(page =>
                     {
                         page.Margin(40);
-                        page.Header().Text("Raport Gestiune Cozi").SemiBold().FontSize(22).FontColor(QuestPDF.Helpers.Colors.Blue.Medium);
+                        page.Header().Text(LocalizationService.Instance["ReportTitle"]).SemiBold().FontSize(22).FontColor(QuestPDF.Helpers.Colors.Blue.Medium);
 
                         page.Content().PaddingVertical(10).Table(table =>
                         {
@@ -120,21 +119,21 @@ namespace QManager.View
 
                             table.Header(header =>
                             {
-                                header.Cell().BorderBottom(1).PaddingVertical(5).Text("Status").SemiBold();
-                                header.Cell().BorderBottom(1).PaddingVertical(5).Text("Talon").SemiBold();
-                                header.Cell().BorderBottom(1).PaddingVertical(5).Text("Birou").SemiBold();
+                                header.Cell().BorderBottom(1).PaddingVertical(5).Text(LocalizationService.Instance["Status"]).SemiBold();
+                                header.Cell().BorderBottom(1).PaddingVertical(5).Text(LocalizationService.Instance["Ticket"]).SemiBold();
+                                header.Cell().BorderBottom(1).PaddingVertical(5).Text(LocalizationService.Instance["Room"]).SemiBold();
                             });
 
                             foreach (var ticket in OnHoldTickets)
                             {
-                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text("În așteptare");
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(LocalizationService.Instance["InWaiting"]);
                                 table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Talon);
                                 table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Room);
                             }
 
                             foreach (var ticket in ReadyTickets)
                             {
-                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text("Pregătit");
+                                table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(LocalizationService.Instance["Ready"]);
                                 table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Talon);
                                 table.Cell().BorderBottom(1).BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2).PaddingVertical(5).Text(ticket.Room);
                             }

@@ -17,6 +17,8 @@ namespace QManager.View
         private TextBox _roomTextBox = null!;
         private TextBlock _statusTextBlock = null!;
 
+        public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;
+
         public BankView()
         {
             AvaloniaXamlLoader.Load(this);
@@ -36,7 +38,7 @@ namespace QManager.View
         private void GenerateTalon_Click(object? sender, RoutedEventArgs e)
         {
             _talonTextBox.Text = $"A{DateTime.Now:ss}";
-            _statusTextBlock.Text = "Talon generated.";
+            _statusTextBlock.Text = LocalizationService.Instance["TalonGenerated"];
         }
 
         private void AddTicket_Click(object? sender, RoutedEventArgs e)
@@ -46,7 +48,7 @@ namespace QManager.View
 
             if (string.IsNullOrWhiteSpace(talon) || string.IsNullOrWhiteSpace(room))
             {
-                _statusTextBlock.Text = "Complete talon and room before adding.";
+                _statusTextBlock.Text = LocalizationService.Instance["CompleteFields"];
                 return;
             }
 
@@ -58,7 +60,7 @@ namespace QManager.View
 
             _ticketRepository.AddTicket(ticket);
             TicketState.Instance.AddTicket(talon, room);
-            _statusTextBlock.Text = $"Added talon {talon} for room {room}.";
+            _statusTextBlock.Text = string.Format(LocalizationService.Instance["TalonAdded"], talon, room);
         }
 
         private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -69,6 +71,11 @@ namespace QManager.View
             {
                 this.Focus();
             }
+        }
+
+        private void Back_Click(object? sender, RoutedEventArgs e)
+        {
+            NavigationRequested?.Invoke(this, new NavigationRequestEventArgs("Bank"));
         }
     }
 }

@@ -54,7 +54,7 @@ namespace QManager.DB.Repositories
                 conn.Open();
 
                 const string sql = @"
-                    SELECT admin_id, username, password_hash, theme, language, created_at
+                    SELECT admin_id, username, password_hash, theme, language, profile_photo, created_at
                     FROM Admins
                     WHERE username = @username
                     LIMIT 1";
@@ -74,6 +74,7 @@ namespace QManager.DB.Repositories
                     Username = reader.GetString("username"),
                     PasswordHash = storedHash,
                     Theme = reader.GetString("theme") == "Dark" ? UserTheme.Dark : UserTheme.Light,
+                    ProfilePhotoPath = reader.IsDBNull(reader.GetOrdinal("profile_photo")) ? string.Empty : reader.GetString("profile_photo"),
                     Language = reader.GetString("language"),
                     CreatedAt = reader.GetDateTime("created_at")
                 };
@@ -81,6 +82,93 @@ namespace QManager.DB.Repositories
             catch
             {
                 return null;
+            }
+        }
+
+        public bool ChangePassword(string username, string currentPassword, string newPassword)
+        {
+            try
+            {
+                using var conn = _db.GetConnection();
+                conn.Open();
+
+                const string selectSql = "SELECT password_hash FROM Admins WHERE username = @username LIMIT 1";
+                string storedHash;
+                using (var cmd = new MySqlCommand(selectSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", username.Trim());
+                    var result = cmd.ExecuteScalar();
+                    if (result == null) return false;
+                    storedHash = result.ToString()!;
+                }
+
+                if (!VerifyPassword(currentPassword, storedHash)) return false;
+
+                const string updateSql = "UPDATE Admins SET password_hash = @new_hash WHERE username = @username";
+                using (var updateCmd = new MySqlCommand(updateSql, conn))
+                {
+                    updateCmd.Parameters.AddWithValue("@new_hash", HashPassword(newPassword));
+                    updateCmd.Parameters.AddWithValue("@username", username.Trim());
+                    return updateCmd.ExecuteNonQuery() > 0;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateUsername(string oldUsername, string newUsername, string password)
+        {
+            try
+            {
+                using var conn = _db.GetConnection();
+                conn.Open();
+
+                // 1. Verificăm parola curentă
+                const string selectSql = "SELECT password_hash FROM Admins WHERE username = @username LIMIT 1";
+                string storedHash;
+                using (var cmd = new MySqlCommand(selectSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", oldUsername.Trim());
+                    var result = cmd.ExecuteScalar();
+                    if (result == null) return false;
+                    storedHash = result.ToString()!;
+                }
+
+                if (!VerifyPassword(password, storedHash)) return false;
+
+                // 2. Dacă parola e corectă, actualizăm numele
+                const string updateSql = "UPDATE Admins SET username = @newUsername WHERE username = @oldUsername";
+                using var updateCmd = new MySqlCommand(updateSql, conn);
+                updateCmd.Parameters.AddWithValue("@newUsername", newUsername.Trim());
+                updateCmd.Parameters.AddWithValue("@oldUsername", oldUsername.Trim());
+
+                return updateCmd.ExecuteNonQuery() > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateProfilePhoto(string username, string photoPath)
+        {
+            try
+            {
+                using var conn = _db.GetConnection();
+                conn.Open();
+
+                const string sql = "UPDATE Admins SET profile_photo = @photo WHERE username = @username";
+                using var cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@photo", photoPath);
+                cmd.Parameters.AddWithValue("@username", username.Trim());
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -123,4 +211,3 @@ namespace QManager.DB.Repositories
         }
     }
 }
-

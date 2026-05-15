@@ -19,13 +19,16 @@ namespace QManager.ViewModels
         private string _password = string.Empty;
 
         [ObservableProperty]
+        private Admin? _loggedInAdmin;
+
+        [ObservableProperty]
         private string _errorMessage = string.Empty;
 
         [RelayCommand]
         private void Login()
         {
-            var admin = _adminRepo.Login(Username, Password);
-            if (admin != null)
+            LoggedInAdmin = _adminRepo.Login(Username, Password);
+            if (LoggedInAdmin != null)
             {
                 ErrorMessage = string.Empty;
                 LoginSucceeded?.Invoke(this, EventArgs.Empty);

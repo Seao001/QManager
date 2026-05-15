@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svc="using:QManager.Service"
+             xmlns:vm="using:QManager.ViewModels"
+             x:Class="QManager.View.ChangePhotoView"
+             Background="Transparent">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+        </Style>
+    </UserControl.Styles>
+    <Grid Margin="26,18,26,18">
+        <StackPanel Spacing="25" MaxWidth="400" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding [ChangePhoto], Source={x:Static svc:LocalizationService.Instance}}"
+                       FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" 
+                       Foreground="{DynamicResource MainTextBrush}"/>
+
+            <Border Width="150" Height="150" CornerRadius="75" ClipToBounds="True" 
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2"
+                    Background="{DynamicResource PanelBgBrush}" HorizontalAlignment="Center">
+                <Panel>
+                    <TextBlock Text="{Binding [AdminInitial], Source={x:Static svc:LocalizationService.Instance}}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48"
+                               IsVisible="{Binding ProfileImage, Converter={x:Static ObjectConverters.IsNull}}"/>
+                    <Image Source="{Binding ProfileImage}"
+                           Stretch="UniformToFill"
+                           IsVisible="{Binding ProfileImage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </Panel>
+            </Border>
+
+            <Button Content="{Binding [ChangePhoto], Source={x:Static svc:LocalizationService.Instance}}"
+                    Click="SelectPhoto_Click"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Height="54" CornerRadius="12"
+                    Background="{DynamicResource SystemAccentColor}"
+                    Foreground="White"
+                    BorderThickness="0"/>
+
+            <Button Command="{Binding SavePhotoCommand}"
+                    Content="{Binding [Save], Source={x:Static svc:LocalizationService.Instance}}"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Height="54" CornerRadius="12"
+                    Background="{DynamicResource PanelBgBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1.5" />
+
+            <Button Content="{Binding [Back], Source={x:Static svc:LocalizationService.Instance}}"
+                    Click="Back_Click"
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="{DynamicResource SubTextBrush}"
+                    Cursor="Hand" />
+        </StackPanel>
+    </Grid>
+</UserControl>

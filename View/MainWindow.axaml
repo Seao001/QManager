@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="clr-namespace:Avalonia.Animation;assembly=Avalonia.Base"
+    xmlns:svc="using:QManager.Service"
         x:Class="QManager.View.MainWindow"
         Title="Bank"
         Width="1080"
@@ -175,35 +176,46 @@
                         PointerPressed="MenuPanel_PointerPressed"
                         ZIndex="30">
                     <Grid RowDefinitions="Auto,*,Auto" Margin="18">
-                        <StackPanel Spacing="8">
-                            <TextBlock x:Name="MenuUserText"
-                                       FontSize="18"
-                                       FontWeight="SemiBold"
-                                       Text="Admin Name" />
-                            <TextBlock Foreground="{DynamicResource SubTextBrush}"
-                                       Text="Navigation" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Border Width="44" Height="44" CornerRadius="22" ClipToBounds="True" 
+                                    Background="{DynamicResource PanelBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1.5">
+                                <Panel>
+                                    <TextBlock Text="{Binding [AdminInitial], Source={x:Static svc:LocalizationService.Instance}}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"
+                                               IsVisible="{Binding #MenuAvatarImage.Source, Converter={x:Static ObjectConverters.IsNull}}" />
+                                    <Image x:Name="MenuAvatarImage" Stretch="UniformToFill" />
+                                </Panel>
+                            </Border>
+                            <StackPanel Spacing="2" VerticalAlignment="Center">
+                                <TextBlock x:Name="MenuUserText"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Text="Admin Name" />
+                                <TextBlock Foreground="{DynamicResource SubTextBrush}"
+                                           Text="Navigation" />
+                            </StackPanel>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1"
                                     Margin="0,24,0,0"
                                     Spacing="12">
                             <Button Classes="menu"
-                                    Content="Bank"
+                                    Content="{Binding [Bank], Source={x:Static svc:LocalizationService.Instance}}"
                                     Click="OpenBank_Click" />
                             <Button Classes="menu"
-                                    Content="Casier"
+                                    Content="{Binding [Talon], Source={x:Static svc:LocalizationService.Instance}}"
                                     Click="OpenTalon_Click" />
                             <Button Classes="menu"
-                                    Content="Dashboard"
+                                    Content="{Binding [Dashboard], Source={x:Static svc:LocalizationService.Instance}}"
                                     Click="OpenDashboard_Click" />
                             <Button Classes="menu"
-                                    Content="Settings"
+                                    Content="{Binding [SystemSettings], Source={x:Static svc:LocalizationService.Instance}}"
                                     Click="OpenSettings_Click" />
                         </StackPanel>
 
                     <Button Grid.Row="2"
                             Classes="menu"
-                            Content="Exit"
+                            Content="{Binding [ExitApp], Source={x:Static svc:LocalizationService.Instance}}"
                             Click="ExitApp_Click" />
                     </Grid>
                 </Border>

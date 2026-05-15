@@ -34,6 +34,7 @@ namespace QManager.View
             _viewModel.LoginSucceeded += OnLoginSucceeded;
             DataContext = _viewModel;
 
+            LocalizationService.Instance.LanguageChanged += (s, e) => UpdateStatusTextBlockMessages();
             ShowSignInPanel();
         }
 
@@ -68,25 +69,25 @@ namespace QManager.View
                     string.IsNullOrWhiteSpace(password) ||
                     string.IsNullOrWhiteSpace(confirmPassword))
                 {
-                    _statusTextBlock.Text = "Name, password and confirm password are required.";
+                    _statusTextBlock.Text = LocalizationService.Instance["RequiredFields"];
                     return;
                 }
 
                 if (password != confirmPassword)
                 {
-                    _statusTextBlock.Text = "Passwords do not match.";
+                    _statusTextBlock.Text = LocalizationService.Instance["PasswordsDoNotMatch"];
                     return;
                 }
 
                 var created = _adminRepository.Register(name, password);
                 if (!created)
                 {
-                    _statusTextBlock.Text = "Account already exists or database is unavailable.";
+                    _statusTextBlock.Text = LocalizationService.Instance["AccountExists"];
                     return;
                 }
 
                 _statusTextBlock.Foreground = Brushes.Green;
-                _statusTextBlock.Text = "Account created successfully.";
+                _statusTextBlock.Text = LocalizationService.Instance["AccountCreated"];
                 await Task.Delay(900);
 
                 _signUpPanel.IsVisible = false;
@@ -101,13 +102,16 @@ namespace QManager.View
             catch (Exception ex)
             {
                 _statusTextBlock.Foreground = Brushes.OrangeRed;
-                _statusTextBlock.Text = $"Create account failed: {ex.Message}";
+                _statusTextBlock.Text = $"{LocalizationService.Instance["CreateAccountFailed"]}: {ex.Message}";
             }
         }
 
         private void OnLoginSucceeded(object? sender, EventArgs e)
         {
-            SessionState.SignIn(_viewModel.Username);
+            if (_viewModel.LoggedInAdmin != null)
+            {
+                SessionState.SignIn(_viewModel.LoggedInAdmin.Username, _viewModel.LoggedInAdmin.ProfilePhotoPath);
+            }
             WindowNavigator.Open<MainWindow>(this);
         }
 
@@ -121,6 +125,11 @@ namespace QManager.View
             _signInUsernameTextBox.Focus();
         }
 
+        private void UpdateStatusTextBlockMessages()
+        {
+            // This method can be used to re-evaluate any hardcoded status messages if they are visible.
+            // For now, the messages are set dynamically, so this might not be strictly necessary unless a message is persistently displayed.
+        }
         private void ResolveControls()
         {
             _signInPanel = GetRequiredControl<Border>("SignInPanel");

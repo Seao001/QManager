@@ -1,7 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:svc="using:QManager.Service"
         x:Class="QManager.View.LoginWindow"
-        Title="Sign in"
+        Title="{Binding [LoginTitle], Source={x:Static svc:LocalizationService.Instance}}"
         Width="900"
         Height="620"
         WindowStartupLocation="CenterScreen"
@@ -18,18 +19,18 @@
                 VerticalAlignment="Center"
                 Padding="28">
             <StackPanel Spacing="14">
-                <TextBlock Text="Sign in"
+                <TextBlock Text="{Binding [Login], Source={x:Static svc:LocalizationService.Instance}}"
                            FontSize="36"
                            FontWeight="Normal"
                            Foreground="#111"
                            HorizontalAlignment="Left"/>
 
                 <TextBox x:Name="SignInUsernameTextBox"
-                         Watermark="User Name"
+                         Watermark="{Binding [Username], Source={x:Static svc:LocalizationService.Instance}}"
                          Text="{Binding Username}"
                          Height="40"/>
                 <TextBox x:Name="SignInPasswordTextBox"
-                         Watermark="Password"
+                         Watermark="{Binding [Password], Source={x:Static svc:LocalizationService.Instance}}"
                          PasswordChar="*"
                          Text="{Binding Password}"
                          Height="40"/>
@@ -42,7 +43,7 @@
                         Width="160"
                         HorizontalContentAlignment="Center"/>
 
-                <TextBlock Text="Sign Up"
+                <TextBlock Text="{Binding [SignUp], Source={x:Static svc:LocalizationService.Instance}}"
                            PointerPressed="ShowSignUpPanel_PointerPressed"
                            Foreground="#444"
                            HorizontalAlignment="Center"

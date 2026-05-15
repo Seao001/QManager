@@ -7,14 +7,18 @@ namespace QManager.Service
     public static class SessionState
     {
         private static readonly TimeSpan DefaultLifetime = TimeSpan.FromDays(7);
-        private static readonly string SessionDirectory = Path.Combine(
+        public static readonly string SessionDirectory = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "QManager");
         private static readonly string SessionFilePath = Path.Combine(SessionDirectory, "session.json");
 
         public static bool IsSignedIn { get; private set; }
         public static string Username { get; private set; } = string.Empty;
+        public static string ProfilePhotoPath { get; private set; } = string.Empty;
         public static DateTimeOffset? ExpiresAtUtc { get; private set; }
+
+        public static event EventHandler? UsernameChanged;
+        public static event EventHandler? ProfilePhotoChanged;
 
         public static bool Restore()
         {
@@ -42,6 +46,7 @@ namespace QManager.Service
                 }
 
                 Username = payload.Username;
+                ProfilePhotoPath = payload.ProfilePhotoPath;
                 ExpiresAtUtc = expiresAt;
                 IsSignedIn = true;
                 return true;
@@ -53,12 +58,12 @@ namespace QManager.Service
             }
         }
 
-        public static void SignIn(string username)
+        public static void SignIn(string username, string profilePhotoPath = "")
         {
-            SignIn(username, DefaultLifetime);
+            SignIn(username, DefaultLifetime, profilePhotoPath);
         }
 
-        public static void SignIn(string username, TimeSpan lifetime)
+        public static void SignIn(string username, TimeSpan lifetime, string profilePhotoPath = "")
         {
             if (string.IsNullOrWhiteSpace(username))
             {
@@ -67,8 +72,27 @@ namespace QManager.Service
 
             IsSignedIn = true;
             Username = username.Trim();
+            ProfilePhotoPath = profilePhotoPath;
             ExpiresAtUtc = DateTimeOffset.UtcNow.Add(lifetime);
             Save();
+        }
+
+        public static void UpdateUsername(string newUsername)
+        {
+            if (string.IsNullOrWhiteSpace(newUsername)) return;
+
+            Username = newUsername.Trim();
+            Save();
+            UsernameChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static void UpdateProfilePhoto(string newPath)
+        {
+            if (string.IsNullOrWhiteSpace(newPath)) return;
+
+            ProfilePhotoPath = newPath;
+            Save();
+            ProfilePhotoChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static void SignOut()
@@ -94,6 +118,7 @@ namespace QManager.Service
             var payload = new SessionPayload
             {
                 Username = Username,
+                ProfilePhotoPath = ProfilePhotoPath,
                 ExpiresAtUtc = ExpiresAtUtc ?? DateTimeOffset.UtcNow.Add(DefaultLifetime)
             };
 
@@ -104,12 +129,14 @@ namespace QManager.Service
         {
             IsSignedIn = false;
             Username = string.Empty;
+            ProfilePhotoPath = string.Empty;
             ExpiresAtUtc = null;
         }
 
         private sealed class SessionPayload
         {
             public string Username { get; set; } = string.Empty;
+            public string ProfilePhotoPath { get; set; } = string.Empty;
             public DateTimeOffset ExpiresAtUtc { get; set; }
         }
     }

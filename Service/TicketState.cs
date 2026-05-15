@@ -12,7 +12,7 @@ namespace QManager.Service
         public ObservableCollection<TicketViewModel> OnHoldTickets { get; } = new();
         public ObservableCollection<TicketViewModel> ReadyTickets { get; } = new();
 
-        public string WaitingNowText => $"Waiting Now - {OnHoldTickets.Count}";
+        public string WaitingNowText => $"{LocalizationService.Instance["WaitingNow"]} - {OnHoldTickets.Count}";
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -20,6 +20,11 @@ namespace QManager.Service
         {
             OnHoldTickets.CollectionChanged += OnCollectionChanged;
             ReadyTickets.CollectionChanged += OnCollectionChanged;
+            LocalizationService.Instance.LanguageChanged += (s, e) => {
+                OnPropertyChanged(nameof(WaitingNowText));
+                foreach (var t in OnHoldTickets) t.RefreshLabels();
+                foreach (var t in ReadyTickets) t.RefreshLabels();
+            };
             InitializeDemoData();
         }
 
@@ -86,7 +91,7 @@ namespace QManager.Service
         }
     }
 
-    public sealed class TicketViewModel
+    public sealed class TicketViewModel : INotifyPropertyChanged
     {
         public TicketViewModel(string talon, string room)
         {
@@ -96,6 +101,18 @@ namespace QManager.Service
 
         public string Talon { get; }
         public string Room { get; }
-        public string RoomLabel => $"Room {Room}";
+        public string RoomLabel => $"{LocalizationService.Instance["Room"]} {Room}";
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void RefreshLabels()
+        {
+            OnPropertyChanged(nameof(RoomLabel));
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
