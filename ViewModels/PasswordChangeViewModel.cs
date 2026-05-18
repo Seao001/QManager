@@ -36,14 +36,14 @@ namespace QManager.ViewModels
         {
             if (string.IsNullOrWhiteSpace(CurrentPassword) || string.IsNullOrWhiteSpace(NewPassword))
             {
-                StatusMessage = "Please fill in all fields.";
+                StatusMessage = LocalizationService.Instance["RequiredFieldsError"];
                 IsError = true;
                 return;
             }
 
             if (NewPassword != ConfirmPassword)
             {
-                StatusMessage = "New passwords do not match.";
+                StatusMessage = LocalizationService.Instance["PasswordsDoNotMatchError"];
                 IsError = true;
                 return;
             }
@@ -53,7 +53,7 @@ namespace QManager.ViewModels
 
             if (success)
             {
-                StatusMessage = "Password updated successfully!";
+                StatusMessage = LocalizationService.Instance["PasswordUpdateSuccess"];
                 IsError = false;
                 CurrentPassword = string.Empty; // Resetăm câmpurile după succes
                 NewPassword = string.Empty;
@@ -61,7 +61,7 @@ namespace QManager.ViewModels
             }
             else
             {
-                StatusMessage = "Failed to update password. Please check your current password.";
+                StatusMessage = LocalizationService.Instance["WrongCredentials"]; // Reutilizăm pentru parolă curentă incorectă
                 IsError = true;
             }
         }

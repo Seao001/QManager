@@ -10,7 +10,7 @@ using Avalonia.Threading; // Adăugat pentru DispatcherTimer
 
 namespace QManager.View
 {
-    public partial class TalonView : UserControl
+    public partial class TalonView : UserControl, INotifyPropertyChanged
     {
         public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;
 
@@ -18,16 +18,42 @@ namespace QManager.View
 
         private readonly TicketState _ticketState = TicketState.Instance;
 
-        public ObservableCollection<TicketViewModel> OnHoldTickets => _ticketState.OnHoldTickets;
-        public ObservableCollection<TicketViewModel> ReadyTickets => _ticketState.ReadyTickets;
+        public string BankFilter { get; }
+
+        public ObservableCollection<TicketViewModel> OnHoldTickets { get; } = new();
+        public ObservableCollection<TicketViewModel> ReadyTickets { get; } = new();
+
+        public string DisplayBankName => string.IsNullOrEmpty(BankFilter) 
+            ? LocalizationService.Instance["MainTitle"] 
+            : BankFilter;
 
         public TalonView()
+            : this(string.Empty) // Constructor implicit, afișează toate băncile dacă nu e specificat un filtru
         {
+        }
+
+        public TalonView(string bankFilter)
+        {
+            BankFilter = bankFilter;
             AvaloniaXamlLoader.Load(this);
             ResolveControls(); // Adăugat pentru a găsi controalele
-            _realTimeClock.Foreground = Avalonia.Media.Brushes.White; // Set the clock color to white
-            InitializeRealTimeClock(); // Adăugat pentru a porni ceasul
+            _ticketState.OnHoldTickets.CollectionChanged += (s, e) => FilterTickets();
+            _ticketState.ReadyTickets.CollectionChanged += (s, e) => FilterTickets();
+            LocalizationService.Instance.LanguageChanged += (s, e) => 
+            {
+                FilterTickets();
+                OnPropertyChanged(nameof(DisplayBankName));
+            };
+            FilterTickets(); // Populează listele inițial
+            InitializeRealTimeClock();
             DataContext = this;
+        }
+
+        public new event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void ResolveControls()
@@ -55,6 +81,24 @@ namespace QManager.View
                 _realTimeClock.Text = DateTime.Now.ToString("HH:mm:ss");
             };
             timer.Start();
+        }
+
+        private void FilterTickets()
+        {
+            OnHoldTickets.Clear();
+            ReadyTickets.Clear();
+
+            foreach (var ticket in _ticketState.OnHoldTickets)
+            {
+                if (string.IsNullOrEmpty(BankFilter) || ticket.Bank == BankFilter)
+                    OnHoldTickets.Add(ticket);
+            }
+
+            foreach (var ticket in _ticketState.ReadyTickets)
+            {
+                if (string.IsNullOrEmpty(BankFilter) || ticket.Bank == BankFilter)
+                    ReadyTickets.Add(ticket);
+            }
         }
 
         private void Back_Click(object? sender, RoutedEventArgs e)

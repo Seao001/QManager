@@ -7,6 +7,8 @@ namespace QManager.View
 {
     public partial class MainView : UserControl
     {
+        // Re-adăugăm evenimentul pentru a fi compatibil cu logica de navigare din MainWindow.
+        // Chiar dacă nu este folosit în interiorul MainView, MainWindow are nevoie de el pentru a compila.
         public event EventHandler<NavigationRequestEventArgs>? NavigationRequested;
 
         public MainView()

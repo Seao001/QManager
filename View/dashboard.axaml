@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svc="using:QManager.Service"
              x:Class="QManager.View.DashboardView"
              Background="{DynamicResource WindowBgBrush}">
     <UserControl.Styles>
@@ -9,8 +10,8 @@
         </Style>
 
         <Style Selector="Button.menu">
-            <Setter Property="Width" Value="190" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Width" Value="220" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1.5" />
@@ -36,8 +37,8 @@
         </Style>
 
         <Style Selector="Button.ticket">
-            <Setter Property="Width" Value="136" />
-            <Setter Property="Height" Value="122" />
+            <Setter Property="Width" Value="118" />
+            <Setter Property="Height" Value="112" />
             <Setter Property="Margin" Value="0,0,14,16" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -59,24 +60,37 @@
     </UserControl.Styles>
 
     <Grid Margin="24" RowDefinitions="Auto,*">
-                        <Grid ColumnDefinitions="*,Auto,Auto">
-                            <StackPanel>
+                        <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                            <StackPanel Orientation="Horizontal" Spacing="20">
                                 <TextBlock FontSize="24"
                                            FontWeight="SemiBold"
-                                           Text="{Binding WaitingNowText}" />
-                                <TextBlock Margin="0,4,0,0"
-                                           Foreground="{DynamicResource SubTextBrush}"
-                                           Text="{Binding AverageWaitText}" />
+                                           Text="{Binding WaitingNowText}" 
+                                           VerticalAlignment="Center"/>
+                                
+                                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding [BankFilterLabel], Source={x:Static svc:LocalizationService.Instance}}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                    <ComboBox ItemsSource="{Binding Banks}"
+                                              SelectedItem="{Binding SelectedBank}"
+                                              Width="180"
+                                              Height="38"
+                                              VerticalAlignment="Center">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
                             </StackPanel>
 
-                            <Button Grid.Column="1"
-                                    Classes="action"
-                                    Margin="0,0,12,0"
-                                    Content="Reset Queue"
-                                    Click="ResetQueue_Click" />
                             <Button Grid.Column="2"
                                     Classes="action"
-                                    Content="Export data"
+                                    Margin="0,0,12,0"
+                                    Content="{Binding [ResetQueue], Source={x:Static svc:LocalizationService.Instance}}"
+                                    Click="ResetQueue_Click" />
+                            <Button Grid.Column="3"
+                                    Classes="action"
+                                    Content="{Binding [ExportData], Source={x:Static svc:LocalizationService.Instance}}"
                                     Click="ExportData_Click" />
                         </Grid>
 
@@ -87,7 +101,7 @@
                                 <TextBlock FontSize="36"
                                            FontWeight="SemiBold"
                                            HorizontalAlignment="Center"
-                                           Text="On hold" />
+                                           Text="{Binding [InWaitingHeader], Source={x:Static svc:LocalizationService.Instance}}" />
 
                                 <ScrollViewer>
                                     <ItemsControl ItemsSource="{Binding OnHoldTickets}">
@@ -100,23 +114,21 @@
                                             <DataTemplate>
                                                 <Button Classes="ticket"
                                                         Tag="{Binding}"
-                                                        Click="MoveToReady_Click">
-                                                    <Grid RowDefinitions="28,34,1,*">
-                                                        <TextBlock Margin="8,0"
-                                                                   VerticalAlignment="Center"
-                                                                   FontSize="14"
-                                                                   Text="Talon" />
-                                                        <Border Grid.Row="1"
-                                                                BorderBrush="{DynamicResource BorderBrush}"
-                                                                BorderThickness="0,1.5,0,1.5">
-                                                            <TextBlock HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"
-                                                                       FontSize="15"
-                                                                       Text="{Binding Talon}" />
-                                                        </Border>
-                                                        <TextBlock Grid.Row="3"
-                                                                   Margin="8,8,8,0"
-                                                                   FontSize="14"
+                                                        Click="MoveToReady_Click"
+                                                        Padding="8">
+                                                    <Grid RowDefinitions="Auto,1,*,Auto">
+                                                        <TextBlock HorizontalAlignment="Left" FontSize="10" Text="Talon" Opacity="0.6" />
+                                                        <Border Grid.Row="1" Background="{DynamicResource BorderBrush}" Height="1" Margin="0,4"/>
+                                                        <TextBlock Grid.Row="2" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   VerticalAlignment="Center" 
+                                                                   FontSize="28" 
+                                                                   FontWeight="Bold" 
+                                                                   Text="{Binding Talon}" />
+                                                        <TextBlock Grid.Row="3" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   FontSize="14" 
+                                                                   FontWeight="SemiBold"
                                                                    Text="{Binding RoomLabel}" />
                                                     </Grid>
                                                 </Button>
@@ -136,7 +148,7 @@
                                 <TextBlock FontSize="36"
                                            FontWeight="SemiBold"
                                            HorizontalAlignment="Center"
-                                           Text="Ready for service" />
+                                           Text="{Binding [ReadyHeader], Source={x:Static svc:LocalizationService.Instance}}" />
 
                                 <ScrollViewer>
                                     <ItemsControl ItemsSource="{Binding ReadyTickets}">
@@ -149,23 +161,21 @@
                                             <DataTemplate>
                                                 <Button Classes="ticket"
                                                         Tag="{Binding}"
-                                                        Click="MoveToOnHold_Click">
-                                                    <Grid RowDefinitions="28,34,1,*">
-                                                        <TextBlock Margin="8,0"
-                                                                   VerticalAlignment="Center"
-                                                                   FontSize="14"
-                                                                   Text="Talon" />
-                                                        <Border Grid.Row="1"
-                                                                BorderBrush="{DynamicResource BorderBrush}"
-                                                                BorderThickness="0,1.5,0,1.5">
-                                                            <TextBlock HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"
-                                                                       FontSize="15"
-                                                                       Text="{Binding Talon}" />
-                                                        </Border>
-                                                        <TextBlock Grid.Row="3"
-                                                                   Margin="8,8,8,0"
-                                                                   FontSize="14"
+                                                        Click="MoveToOnHold_Click"
+                                                        Padding="8">
+                                                    <Grid RowDefinitions="Auto,1,*,Auto">
+                                                        <TextBlock HorizontalAlignment="Left" FontSize="10" Text="Talon" Opacity="0.6" />
+                                                        <Border Grid.Row="1" Background="{DynamicResource BorderBrush}" Height="1" Margin="0,4"/>
+                                                        <TextBlock Grid.Row="2" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   VerticalAlignment="Center" 
+                                                                   FontSize="28" 
+                                                                   FontWeight="Bold" 
+                                                                   Text="{Binding Talon}" />
+                                                        <TextBlock Grid.Row="3" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   FontSize="14" 
+                                                                   FontWeight="SemiBold"
                                                                    Text="{Binding RoomLabel}" />
                                                     </Grid>
                                                 </Button>

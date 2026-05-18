@@ -66,17 +66,21 @@ DB/
 Models/
  Admin.cs
  Counter.cs
+ DashboardState.cs
  QueueService.cs
  Ticket.cs
+ TicketStateDto.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  QManager.AssemblyInfo.cs
 Program.cs
 Service/
+ DashboardStateService.cs
  LocalizationService.cs
  SessionState.cs
  SettingsManager.cs
  ThemeManager.cs
+ TicketExportService.cs
  Ticketgenerate.cs
  TicketState.cs
 View/

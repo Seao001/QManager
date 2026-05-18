@@ -18,22 +18,46 @@
         </Style>
 
         <Style Selector="Button.menu">
-            <Setter Property="Width" Value="190" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Width" Value="220" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Background" Value="{DynamicResource PanelBgBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="BorderThickness" Value="1.2" />
             <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Padding" Value="14,10" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.1" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.menu:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource HeaderBgBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource MainTextBrush}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource MainTextBrush}" />
+        </Style>
+
+        <Style Selector="Button.menu:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.98)" />
+            <Setter Property="Opacity" Value="0.8" />
         </Style>
 
         <Style Selector="Button.menu:disabled">
             <Setter Property="Background" Value="{DynamicResource NavBgBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource MainTextBrush}" />
             <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="TextBlock.category-header">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Opacity" Value="0.9" />
+            <Setter Property="Margin" Value="4,15,0,8" />
         </Style>
 
         <Style Selector="Button.action">
@@ -64,13 +88,13 @@
         </Style>
     </Window.Styles>
 
-    <Border Margin="10"
+    <Border x:Name="RootBorder" Margin="10"
             Background="{DynamicResource MainBorderBgBrush}"
             BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="2"
             CornerRadius="16">
-        <Grid RowDefinitions="42,*">
-            <Border Grid.Row="0"
+        <Grid x:Name="MainRootGrid" RowDefinitions="Auto,*">
+            <Border x:Name="HeaderBorder" Grid.Row="0" Height="42"
                     Background="{DynamicResource HeaderBgBrush}"
                     BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="0,0,0,2"
@@ -95,13 +119,13 @@
                 </Grid>
             </Border>
 
-            <Grid Grid.Row="1" ColumnDefinitions="96,*">
-                <Border Grid.Column="0"
+            <Grid x:Name="ContentGrid" Grid.Row="1" ColumnDefinitions="96,*">
+                <Border x:Name="SidebarBackground" Grid.Column="0"
                         Background="{DynamicResource NavBgBrush}"
                         BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="0,0,2,0" />
 
-                <Grid Grid.Column="0">
+                <Grid x:Name="SidebarButtonArea" Grid.Column="0">
                     <Button x:Name="MenuButton"
                             Width="58"
                             Height="58"
@@ -138,19 +162,34 @@
                     </Button>
                 </Grid>
 
-                <Border Grid.Column="1"
+                <Border x:Name="MainContentBorder" Grid.Column="1"
                         Margin="26"
                         Background="{DynamicResource PanelBgBrush}"
                         BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="2"
                         CornerRadius="10">
-                    <TransitioningContentControl x:Name="MainContentPresenter"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch">
-                        <TransitioningContentControl.PageTransition>
-                            <anim:CrossFade Duration="0:0:0.22" />
-                        </TransitioningContentControl.PageTransition>
-                    </TransitioningContentControl>
+                    <Grid>
+                        <TransitioningContentControl x:Name="MainContentPresenter"
+                                                      HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="Stretch">
+                            <TransitioningContentControl.PageTransition>
+                                <anim:CrossFade Duration="0:0:0.22" />
+                            </TransitioningContentControl.PageTransition>
+                        </TransitioningContentControl>
+
+                        <!-- Buton pentru Mod TV / Fullscreen (Dreapta-Jos) -->
+                        <Button x:Name="TVModeButton"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,20,20"
+                                Width="50"
+                                Height="50"
+                                Classes="plain-button"
+                                Click="ToggleTVMode_Click"
+                                ToolTip.Tip="Mod TV / Fullscreen">
+                            <PathIcon Data="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" />
+                        </Button>
+                    </Grid>
                 </Border>
 
                 <Button x:Name="MenuBackdrop"
@@ -164,7 +203,7 @@
 
                 <Border x:Name="MenuPanel"
                         Grid.ColumnSpan="2"
-                        Width="246"
+                        Width="300"
                         Margin="20,20,0,20"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
@@ -196,22 +235,28 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <StackPanel Grid.Row="1"
-                                    Margin="0,24,0,0"
-                                    Spacing="12">
-                            <Button Classes="menu"
-                                    Content="{Binding [Bank], Source={x:Static svc:LocalizationService.Instance}}"
-                                    Click="OpenBank_Click" />
-                            <Button Classes="menu"
-                                    Content="{Binding [Talon], Source={x:Static svc:LocalizationService.Instance}}"
-                                    Click="OpenTalon_Click" />
-                            <Button Classes="menu"
-                                    Content="{Binding [Dashboard], Source={x:Static svc:LocalizationService.Instance}}"
-                                    Click="OpenDashboard_Click" />
-                            <Button Classes="menu"
-                                    Content="{Binding [SystemSettings], Source={x:Static svc:LocalizationService.Instance}}"
-                                    Click="OpenSettings_Click" />
-                        </StackPanel>
+                        <ScrollViewer Grid.Row="1" 
+                                      Margin="0,24,0,12" 
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Spacing="12">
+                                <Button Classes="menu"
+                                        Content="{Binding [Home], Source={x:Static svc:LocalizationService.Instance}}"
+                                        Click="OpenHome_Click" />
+
+                                <TextBlock Text="{Binding [BankCashierHeader], Source={x:Static svc:LocalizationService.Instance}}" Classes="category-header"/>
+                                <StackPanel x:Name="BankCashierMenu" Spacing="5" />
+
+                                <TextBlock Text="{Binding [BankDisplayHeader], Source={x:Static svc:LocalizationService.Instance}}" Classes="category-header"/>
+                                <StackPanel x:Name="BankDisplayMenu" Spacing="5" />
+
+                                <Button Classes="menu"
+                                        Content="{Binding [Dashboard], Source={x:Static svc:LocalizationService.Instance}}"
+                                        Click="OpenDashboard_Click" />
+                                <Button Classes="menu"
+                                        Content="{Binding [SystemSettings], Source={x:Static svc:LocalizationService.Instance}}"
+                                        Click="OpenSettings_Click" />
+                            </StackPanel>
+                        </ScrollViewer>
 
                     <Button Grid.Row="2"
                             Classes="menu"

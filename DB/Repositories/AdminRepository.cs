@@ -54,7 +54,7 @@ namespace QManager.DB.Repositories
                 conn.Open();
 
                 const string sql = @"
-                    SELECT admin_id, username, password_hash, theme, language, profile_photo, created_at
+                    SELECT admin_id, username, password_hash, theme, language, created_at
                     FROM Admins
                     WHERE username = @username
                     LIMIT 1";
@@ -65,7 +65,7 @@ namespace QManager.DB.Repositories
                 using var reader = cmd.ExecuteReader();
                 if (!reader.Read()) return null;
 
-                var storedHash = reader.GetString("password_hash");
+                var storedHash = reader.GetString("password_hash").Trim();
                 if (!VerifyPassword(password, storedHash)) return null;
 
                 return new Admin
@@ -74,7 +74,7 @@ namespace QManager.DB.Repositories
                     Username = reader.GetString("username"),
                     PasswordHash = storedHash,
                     Theme = reader.GetString("theme") == "Dark" ? UserTheme.Dark : UserTheme.Light,
-                    ProfilePhotoPath = reader.IsDBNull(reader.GetOrdinal("profile_photo")) ? string.Empty : reader.GetString("profile_photo"),
+                    ProfilePhotoPath = string.Empty,
                     Language = reader.GetString("language"),
                     CreatedAt = reader.GetDateTime("created_at")
                 };
@@ -125,7 +125,6 @@ namespace QManager.DB.Repositories
                 using var conn = _db.GetConnection();
                 conn.Open();
 
-                // 1. Verificăm parola curentă
                 const string selectSql = "SELECT password_hash FROM Admins WHERE username = @username LIMIT 1";
                 string storedHash;
                 using (var cmd = new MySqlCommand(selectSql, conn))
@@ -138,7 +137,6 @@ namespace QManager.DB.Repositories
 
                 if (!VerifyPassword(password, storedHash)) return false;
 
-                // 2. Dacă parola e corectă, actualizăm numele
                 const string updateSql = "UPDATE Admins SET username = @newUsername WHERE username = @oldUsername";
                 using var updateCmd = new MySqlCommand(updateSql, conn);
                 updateCmd.Parameters.AddWithValue("@newUsername", newUsername.Trim());
@@ -190,8 +188,13 @@ namespace QManager.DB.Repositories
         {
             try
             {
+                storedValue = storedValue.Trim();
+
                 var parts = storedValue.Split('.', 3);
-                if (parts.Length != 3 || !int.TryParse(parts[0], out var iterations)) return false;
+                if (parts.Length != 3 || !int.TryParse(parts[0], out var iterations))
+                {
+                    return string.Equals(password, storedValue, StringComparison.Ordinal);
+                }
 
                 var salt = Convert.FromBase64String(parts[1]);
                 var expectedHash = Convert.FromBase64String(parts[2]);

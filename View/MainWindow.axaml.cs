@@ -1,9 +1,11 @@
 using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
+using System.Collections.Generic;
 using Avalonia.Threading;
 using QManager.Service;
 
@@ -11,29 +13,44 @@ namespace QManager.View
 {
     public partial class MainWindow : Window
     {
+        private Border _rootBorder = null!;
+        private Border _headerBorder = null!;
+        private Grid _contentGrid = null!;
+        private Border _sidebarBackground = null!;
+        private Grid _sidebarButtonArea = null!;
+        private Border _mainContentBorder = null!;
+
         private Border _menuPanel = null!;
         private Button _menuBackdrop = null!;
         private TextBlock _menuUserText = null!;
         private Image _menuAvatarImage = null!; // Adăugat: Controlul Image pentru avatarul din meniu
         private TransitioningContentControl _mainContentPresenter = null!;
+        private StackPanel _bankCashierMenu = null!; // Adăugat pentru meniul dinamic al casierilor
+        private StackPanel _bankDisplayMenu = null!; // Adăugat pentru meniul dinamic al ecranelor principale
         private UserControl? _currentContentView;
+        private bool _isTVMode = false;
 
         public MainWindow()
         {
             AvaloniaXamlLoader.Load(this);
             this.SystemDecorations = SystemDecorations.None;
-            this.WindowState = WindowState.FullScreen;
+            this.WindowState = WindowState.Maximized;
             ResolveControls();
             AttachViewNavigation();
 
             this.DataContext = this;
             UpdateMenuUserText();
             UpdateMenuAvatar(); // Adăugat: Actualizează avatarul la pornire
-            LocalizationService.Instance.LanguageChanged += (s, e) => UpdateMenuUserText();
+            LocalizationService.Instance.LanguageChanged += (s, e) => 
+            {
+                UpdateMenuUserText();
+                GenerateBankMenus(); // Regenerăm butoanele pentru a traduce "Casier"/"Talon"
+            };
             SessionState.UsernameChanged += (s, e) => UpdateMenuUserText();
             SessionState.ProfilePhotoChanged += (s, e) => UpdateMenuAvatar(); // Adăugat: Abonează-te la schimbările fotografiei de profil
-
-            SetMainContent(new TalonView());
+            
+            GenerateBankMenus(); // Generează butoanele de meniu pentru bănci
+            SetMainContent(new MainView());
             HideMenu();
         }
 
@@ -63,11 +80,20 @@ namespace QManager.View
 
         private void ResolveControls()
         {
+            _rootBorder = GetRequiredControl<Border>("RootBorder");
+            _headerBorder = GetRequiredControl<Border>("HeaderBorder");
+            _contentGrid = GetRequiredControl<Grid>("ContentGrid");
+            _sidebarBackground = GetRequiredControl<Border>("SidebarBackground");
+            _sidebarButtonArea = GetRequiredControl<Grid>("SidebarButtonArea");
+            _mainContentBorder = GetRequiredControl<Border>("MainContentBorder");
+
             _menuPanel = GetRequiredControl<Border>("MenuPanel");
             _menuBackdrop = GetRequiredControl<Button>("MenuBackdrop");
             _mainContentPresenter = GetRequiredControl<TransitioningContentControl>("MainContentPresenter");
             _menuUserText = GetRequiredControl<TextBlock>("MenuUserText");
             _menuAvatarImage = GetRequiredControl<Image>("MenuAvatarImage"); // Adăugat: Rezolvă noul control Image
+            _bankCashierMenu = GetRequiredControl<StackPanel>("BankCashierMenu");
+            _bankDisplayMenu = GetRequiredControl<StackPanel>("BankDisplayMenu");
         }
 
         private T GetRequiredControl<T>(string name) where T : Control =>
@@ -86,18 +112,88 @@ namespace QManager.View
             };
         }
 
+        private void GenerateBankMenus()
+        {
+            var banks = new List<string> { "Maib", "VictoriaBank", "BNM", "MICB" }; // Lista de bănci
+
+            // Asigurăm că aceste controale sunt rezolvate înainte de a le goli/adăuga copii
+            if (_bankCashierMenu == null || _bankDisplayMenu == null)
+            {
+                // Aceasta nu ar trebui să se întâmple dacă ResolveControls() este apelată corect înainte
+                // dar ca o măsură de siguranță, putem re-rezolva sau arunca o excepție.
+                // Pentru moment, presupunem că ResolveControls() funcționează.
+                // Dacă această eroare persistă, verificați MainWindow.axaml pentru x:Name="BankCashierMenu" și x:Name="BankDisplayMenu"
+                return; 
+            }
+
+            _bankCashierMenu.Children.Clear();
+            _bankDisplayMenu.Children.Clear();
+
+            foreach (var bank in banks)
+            {
+                var cashierLabel = LocalizationService.Instance["CashierSuffix"];
+                var displayLabel = LocalizationService.Instance["DisplaySuffix"];
+
+                // Butoane pentru Casier
+                var cashierButton = new Button
+                {
+                    Content = $"{bank} {cashierLabel}",
+                    Classes = { "menu" },
+                    FontSize = 14,
+                    Margin = new Avalonia.Thickness(12, 0, 0, 2)
+                };
+                cashierButton.Click += (s, e) => OnNavigationRequested(s, new NavigationRequestEventArgs($"{bank} Cashier"));
+                _bankCashierMenu.Children.Add(cashierButton);
+
+                // Butoane pentru Ecranul Principal (Talon)
+                var displayButton = new Button
+                {
+                    Content = $"{bank} {displayLabel}",
+                    Classes = { "menu" },
+                    FontSize = 14,
+                    Margin = new Avalonia.Thickness(12, 0, 0, 2)
+                };
+                displayButton.Click += (s, e) => OnNavigationRequested(s, new NavigationRequestEventArgs($"{bank} Display"));
+                _bankDisplayMenu.Children.Add(displayButton);
+            }
+
+            // Adaugă un buton "Toate Taloanele" pentru TalonView fără filtru
+            var allTicketsButton = new Button 
+            { 
+                Content = LocalizationService.Instance["AllTickets"], 
+                Classes = { "menu" }, 
+                FontSize = 14, 
+                Margin = new Avalonia.Thickness(12, 0, 0, 2) 
+            };
+            allTicketsButton.Click += (s, e) => OnNavigationRequested(s, new NavigationRequestEventArgs("Bank")); // Navighează la TalonView fără filtru
+            _bankDisplayMenu.Children.Add(allTicketsButton);
+        }
+
         private void OnNavigationRequested(object? sender, NavigationRequestEventArgs e)
         {
-            switch (e.Target)
+            // Verificăm dacă este o navigare specifică unei bănci
+            if (e.Target.EndsWith("Cashier"))
             {
-                case "Bank":
-                    SetMainContent(new TalonView());
-                    break;
-                case "Casier":
-                case "Talon":
-                    SetMainContent(new BankView());
-                    break;
-                case "Dashboard":
+                var bankName = e.Target.Replace("Cashier", "").Trim();
+                SetMainContent(new BankView(bankName));
+            }
+            else if (e.Target.EndsWith("Display"))
+            {
+                var bankName = e.Target.Replace("Display", "").Trim();
+                SetMainContent(new TalonView(bankName));
+            }
+            else // Navigare generală
+            {
+                switch (e.Target)
+                {
+                    case "Home":
+                        SetMainContent(new MainView());
+                        break;
+                    case "Bank": // Aceasta ar putea fi o navigare către un ecran de selecție bancară generală, sau o valoare implicită
+                        SetMainContent(new TalonView()); // Afișează toate tichetele
+                        break;
+                    // Cazul "Casier" și "Talon" generic nu mai este necesar, deoarece navigăm către instanțe specifice băncii
+                    case "Dashboard":
                     SetMainContent(new DashboardView());
                     break;
                 case "Settings":
@@ -125,6 +221,7 @@ namespace QManager.View
                 case "Exit":
                     this.Close();
                     break;
+                }
             }
         }
 
@@ -142,6 +239,7 @@ namespace QManager.View
                 if (_currentContentView is BankView bv) bv.NavigationRequested -= OnNavigationRequested;
                 if (_currentContentView is ChangePhotoView cpv) cpv.NavigationRequested -= OnNavigationRequested;
                 if (_currentContentView is ChangeAdminNameView canv) canv.NavigationRequested -= OnNavigationRequested;
+                if (_currentContentView is DashboardView dv) dv.NavigationRequested -= OnNavigationRequested;
             }
 
             _currentContentView = view;
@@ -156,6 +254,7 @@ namespace QManager.View
             if (_currentContentView is BankView nbv) nbv.NavigationRequested += OnNavigationRequested;
             if (_currentContentView is ChangePhotoView ncpv) ncpv.NavigationRequested += OnNavigationRequested;
             if (_currentContentView is ChangeAdminNameView ncanv) ncanv.NavigationRequested += OnNavigationRequested;
+            if (_currentContentView is DashboardView ndv) ndv.NavigationRequested += OnNavigationRequested;
 
             _mainContentPresenter.Content = view;
             HideMenu();
@@ -182,10 +281,68 @@ namespace QManager.View
             e.Handled = true;
         }
 
-        private void OpenBank_Click(object? sender, RoutedEventArgs e) => SetMainContent(new TalonView());
-        private void OpenTalon_Click(object? sender, RoutedEventArgs e) => SetMainContent(new BankView());
-        private void OpenDashboard_Click(object? sender, RoutedEventArgs e) => SetMainContent(new DashboardView());
-        private void OpenSettings_Click(object? sender, RoutedEventArgs e) => SetMainContent(new SettingsView());
+        // Logica pentru comutarea Modului TV / Fullscreen
+        private void ToggleTVMode_Click(object? sender, RoutedEventArgs e)
+        {
+            _isTVMode = !_isTVMode;
+
+            if (_isTVMode)
+            {
+                // Trecem în FullScreen și ascundem elementele de UI
+                this.WindowState = WindowState.FullScreen;
+                _headerBorder.IsVisible = false;
+                _sidebarBackground.IsVisible = false;
+                _sidebarButtonArea.IsVisible = false;
+                _contentGrid.ColumnDefinitions[0].Width = new GridLength(0);
+                
+                // Eliminăm marginile și colțurile rotunjite pentru a ocupa 100% din ecran
+                _rootBorder.Margin = new Thickness(0);
+                _rootBorder.CornerRadius = new CornerRadius(0);
+                _rootBorder.BorderThickness = new Thickness(0);
+                
+                _mainContentBorder.Margin = new Thickness(0);
+                _mainContentBorder.CornerRadius = new CornerRadius(0);
+                _mainContentBorder.BorderThickness = new Thickness(0);
+
+                HideMenu(); // Închidem meniul lateral (burger) dacă era deschis
+            }
+            else
+            {
+                // Revenim la modul fereastră normală (Maximizat)
+                this.WindowState = WindowState.Maximized;
+                _headerBorder.IsVisible = true;
+                _sidebarBackground.IsVisible = true;
+                _sidebarButtonArea.IsVisible = true;
+                _contentGrid.ColumnDefinitions[0].Width = new GridLength(96);
+
+                _rootBorder.Margin = new Thickness(10);
+                _rootBorder.CornerRadius = new CornerRadius(16);
+                _rootBorder.BorderThickness = new Thickness(2);
+
+                _mainContentBorder.Margin = new Thickness(26);
+                _mainContentBorder.CornerRadius = new CornerRadius(10);
+                _mainContentBorder.BorderThickness = new Thickness(2);
+            }
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            // Ieșire automată din modul TV la apăsarea tastei ESC
+            if (e.Key == Key.Escape && _isTVMode)
+            {
+                ToggleTVMode_Click(null, new RoutedEventArgs());
+            }
+        }
+
+        // Re-adăugăm metodele cerute de MainWindow.axaml pentru a fixa eroarea AVLN:0004
+        private void OpenHome_Click(object? sender, RoutedEventArgs e) => OnNavigationRequested(this, new NavigationRequestEventArgs("Home"));
+
+        private void OpenDashboard_Click(object? sender, RoutedEventArgs e) => OnNavigationRequested(this, new NavigationRequestEventArgs("Dashboard"));
+        
+        private void OpenSettings_Click(object? sender, RoutedEventArgs e) => OnNavigationRequested(this, new NavigationRequestEventArgs("Settings"));
+        
         private void ExitApp_Click(object? sender, RoutedEventArgs e) => this.Close();
     }
 }

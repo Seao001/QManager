@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -35,23 +36,40 @@ namespace QManager.View
             DataContext = _viewModel;
 
             LocalizationService.Instance.LanguageChanged += (s, e) => UpdateStatusTextBlockMessages();
-            ShowSignInPanel();
+            
+            // Încercăm să restaurăm sesiunea la pornirea ferestrei de login
+            if (SessionState.Restore())
+            {
+                // Dacă sesiunea este restaurată cu succes, deschidem direct fereastra principală
+                WindowNavigator.Open<MainWindow>(this);
+            }
+            else ShowSignInPanel(); // Altfel, afișăm panoul de autentificare
         }
 
         private void ShowSignUpPanel_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            _statusTextBlock.Text = string.Empty;
             _nameTextBox.Text = string.Empty;
             _passwordSignUpTextBox.Text = string.Empty;
             _confirmPasswordTextBox.Text = string.Empty;
+            _viewModel.ErrorMessage = string.Empty; // Clear ViewModel error message
+            _statusTextBlock.Text = string.Empty;
 
             _signInPanel.IsVisible = false;
             _signUpPanel.IsVisible = true;
             _nameTextBox.Focus();
         }
 
+        private void TogglePassword_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is TextBox tb)
+            {
+                tb.PasswordChar = tb.PasswordChar == '*' ? '\0' : '*';
+            }
+        }
+
         private void ShowSignInPanel_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
+            _viewModel.ErrorMessage = string.Empty; // Clear ViewModel error message
             ShowSignInPanel();
         }
 
@@ -90,13 +108,18 @@ namespace QManager.View
                 _statusTextBlock.Text = LocalizationService.Instance["AccountCreated"];
                 await Task.Delay(900);
 
+                // Resetăm UI-ul pentru Login pentru a fi siguri că datele sunt proaspete
+                _nameTextBox.Text = string.Empty;
+                _passwordSignUpTextBox.Text = string.Empty;
+                _confirmPasswordTextBox.Text = string.Empty;
+
+                // Switch back to Sign In panel
                 _signUpPanel.IsVisible = false;
                 _signInPanel.IsVisible = true;
+                // Update only the ViewModel - let DataBinding update the UI
                 _viewModel.Username = name;
                 _viewModel.Password = string.Empty;
                 _viewModel.ErrorMessage = string.Empty;
-                _signInUsernameTextBox.Text = name;
-                _signInPasswordTextBox.Text = string.Empty;
                 _signInUsernameTextBox.Focus();
             }
             catch (Exception ex)
@@ -110,7 +133,12 @@ namespace QManager.View
         {
             if (_viewModel.LoggedInAdmin != null)
             {
-                SessionState.SignIn(_viewModel.LoggedInAdmin.Username, _viewModel.LoggedInAdmin.ProfilePhotoPath);
+                // Dacă "Remember Me" este bifat, sesiunea durează 30 de zile, altfel 24 de ore.
+                var lifetime = _viewModel.RememberMe 
+                    ? TimeSpan.FromDays(30) 
+                    : TimeSpan.FromHours(24);
+
+                SessionState.SignIn(_viewModel.LoggedInAdmin.Username, lifetime, _viewModel.LoggedInAdmin.ProfilePhotoPath);
             }
             WindowNavigator.Open<MainWindow>(this);
         }
@@ -119,9 +147,8 @@ namespace QManager.View
         {
             _signUpPanel.IsVisible = false;
             _signInPanel.IsVisible = true;
+            _statusTextBlock.Text = string.Empty;
             _viewModel.ErrorMessage = string.Empty;
-            _signInUsernameTextBox.Text = _viewModel.Username;
-            _signInPasswordTextBox.Text = string.Empty;
             _signInUsernameTextBox.Focus();
         }
 

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QManager.DB.Repositories;
 using QManager.Models;
+using QManager.Service;
 
 namespace QManager.ViewModels
 {
@@ -17,6 +18,9 @@ namespace QManager.ViewModels
 
         [ObservableProperty]
         private string _password = string.Empty;
+
+        [ObservableProperty]
+        private bool _rememberMe;
 
         [ObservableProperty]
         private Admin? _loggedInAdmin;
@@ -34,8 +38,8 @@ namespace QManager.ViewModels
                 LoginSucceeded?.Invoke(this, EventArgs.Empty);
             }
             else
-            {
-                ErrorMessage = "Incorrect username or password.";
+            {   // Folosim mesajul localizat
+                ErrorMessage = LocalizationService.Instance["WrongCredentials"];
             }
         }
     }

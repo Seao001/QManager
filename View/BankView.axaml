@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svc="using:QManager.Service"
              x:Class="QManager.View.BankView"
              Background="{DynamicResource WindowBgBrush}"
              Focusable="True"
@@ -9,39 +10,52 @@
             BorderThickness="2"
             CornerRadius="10"
             Margin="0">
-        <Grid Margin="34" RowDefinitions="Auto,Auto,Auto,*">
+        <Grid Margin="34" RowDefinitions="Auto,Auto,Auto,Auto,*">
 
-            <Grid Grid.Row="2"
-                  Margin="0,40,0,0"
+            <!-- Secțiunea principală de control (stânga și dreapta) -->
+            <Grid Grid.Row="2" Grid.RowSpan="2"
+                  Margin="0,40,0,0" 
                   ColumnDefinitions="*,36,*">
-                <StackPanel Grid.Column="0" Spacing="10">
-                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="Talon" />
-                    <TextBox x:Name="TalonTextBox"
-                             Classes="form"
-                             Height="42"
-                             Watermark="Ex: A11" />
-                    <Button Classes="action"
-                            Width="220"
-                            Content="Generate Talon"
-                            Click="GenerateTalon_Click" />
-                </StackPanel>
+                <!-- Definiții de rânduri pentru alinierea elementelor în secțiunile stânga/dreapta -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" /> <!-- Pentru eticheta "Bancă:" -->
+                    <RowDefinition Height="Auto" /> <!-- Pentru etichetele "Talon" și "Birou" -->
+                    <RowDefinition Height="Auto" /> <!-- Pentru TextBox și ComboBox -->
+                    <RowDefinition Height="Auto" /> <!-- Pentru butonul "Update" -->
+                </Grid.RowDefinitions>
 
+                <!-- Secțiunea Stânga (Bank Name, Talon, TextBox, Button) -->
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Left">
+                        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding [Bank], Source={x:Static svc:LocalizationService.Instance}, StringFormat='{}{0}:'}" />
+                        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding BankName}" />
+                </StackPanel>
+                <TextBlock Grid.Column="0" Grid.Row="1" FontSize="18" FontWeight="SemiBold" Text="{Binding [Talon], Source={x:Static svc:LocalizationService.Instance}}" HorizontalAlignment="Left" Margin="0,10,0,0" />
+                <TextBox x:Name="TalonTextBox" Grid.Column="0" Grid.Row="2"
+                         Classes="form" Height="42" VerticalAlignment="Center"
+                         Watermark="{Binding [TalonGenerated], Source={x:Static svc:LocalizationService.Instance}}" 
+                         IsReadOnly="True" Margin="0,5,0,0"/>
+                <Button Grid.Column="0" Grid.Row="3"
+                        Classes="action" Width="220" HorizontalAlignment="Left"
+                        Content="{Binding [Update], Source={x:Static svc:LocalizationService.Instance}}"
+                        Click="GenerateTalon_Click" Margin="0,10,0,0" />
+
+                <!-- Linia de separare verticală -->
                 <Border Grid.Column="1"
                         Width="2"
-                        Margin="17,8"
+                        Margin="17,0"
                         Background="{DynamicResource SubTextBrush}"
-                        HorizontalAlignment="Center" />
+                        HorizontalAlignment="Center"
+                        Grid.RowSpan="4" />
 
-                <StackPanel Grid.Column="2" Spacing="10">
-                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="Room" />
-                    <TextBox x:Name="RoomTextBox"
-                             Classes="form"
-                             Height="42"
-                             Watermark="Ex: 03" />
-                </StackPanel>
+                <!-- Secțiunea Dreapta (Room, ComboBox) -->
+                <TextBlock Grid.Column="2" Grid.Row="1" FontSize="18" FontWeight="SemiBold" Text="{Binding [Room], Source={x:Static svc:LocalizationService.Instance}}" HorizontalAlignment="Left" Margin="0,10,0,0" />
+                <ComboBox x:Name="RoomComboBox" Grid.Column="2" Grid.Row="2"
+                          HorizontalAlignment="Stretch" Height="42" VerticalAlignment="Center"
+                          PlaceholderText="Selectați biroul..." Margin="0,5,0,0" />
             </Grid>
 
-            <StackPanel Grid.Row="3"
+            <!-- Secțiunea de jos (Add Ticket Button, StatusTextBlock) -->
+            <StackPanel Grid.Row="4"
                         VerticalAlignment="Bottom"
                         Spacing="14">
                 <Button Classes="action"

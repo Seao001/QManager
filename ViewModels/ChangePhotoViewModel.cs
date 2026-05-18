@@ -97,7 +97,7 @@ namespace QManager.ViewModels
             }
             else
             {
-                StatusMessage = "Failed to update photo.";
+                StatusMessage = LocalizationService.Instance["CreateAccountFailed"]; // Reutilizăm pentru eroare generică
                 IsError = true;
                 System.Diagnostics.Debug.WriteLine($"[ChangePhotoViewModel] Failed to update photo in DB. Path: '{finalPath}'");
             }

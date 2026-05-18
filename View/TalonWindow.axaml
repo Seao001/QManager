@@ -1,5 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svc="using:QManager.Service"
              x:Class="QManager.View.TalonView"
              Background="{DynamicResource WindowBgBrush}">
     <UserControl.Styles>
@@ -31,12 +32,21 @@
                             BorderBrush="{DynamicResource BorderBrush}"
                             BorderThickness="2">
             <Grid Margin="18,14,18,18" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,*,*">
+                    <TextBlock Text="{Binding DisplayBankName}"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               FontSize="38"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="10,0,0,0" />
+
                     <TextBlock x:Name="RealTimeClock"
                                Grid.Row="0"
                                Grid.Column="2"
                                FontSize="46"
                                FontWeight="Medium"
-                               Foreground="#1F252B"
+                               Foreground="{DynamicResource MainTextBrush}"
                                VerticalAlignment="Center"
                                Margin="0,0,20,0"
                                HorizontalAlignment="Right"/>
@@ -44,7 +54,7 @@
                             <Grid Grid.Row="1" Grid.ColumnSpan="3" ColumnDefinitions="*,1,*" Margin="12,0,12,8">
                                 <TextBlock FontSize="30"
                                            HorizontalAlignment="Center"
-                                           Text="On hold" />
+                                           Text="{Binding [InWaitingHeader], Source={x:Static svc:LocalizationService.Instance}}" />
                                 <Border Grid.Column="1"
                                         Width="1"
                                         Background="{DynamicResource BorderBrush}"
@@ -53,7 +63,7 @@
                                 <TextBlock Grid.Column="2"
                                            FontSize="30"
                                            HorizontalAlignment="Center"
-                                           Text="Ready for service" />
+                                           Text="{Binding [ReadyHeader], Source={x:Static svc:LocalizationService.Instance}}" />
                             </Grid>
 
                             <Grid Grid.Row="2" Grid.ColumnSpan="3" ColumnDefinitions="*,1,*">
@@ -73,23 +83,20 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Classes="ticket" Width="118" Height="112" Margin="0,0,14,16">
-                                                    <Grid RowDefinitions="26,34,1,*">
-                                                        <TextBlock Margin="4,0"
-                                                                   VerticalAlignment="Center"
-                                                                   FontSize="13"
-                                                                   Text="Talon" />
-                                                        <Border Grid.Row="1"
-                                                                BorderBrush="{DynamicResource BorderBrush}"
-                                                                BorderThickness="0,1.5,0,1.5">
-                                                            <TextBlock HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"
-                                                                       FontSize="14"
-                                                                       Text="{Binding Talon}" />
-                                                        </Border>
-                                                        <TextBlock Grid.Row="3"
-                                                                   Margin="6,8,6,0"
-                                                                   FontSize="13"
+                                                <Border Classes="ticket" Width="118" Height="112" Margin="0,0,14,16" Padding="8">
+                                                    <Grid RowDefinitions="Auto,1,*,Auto">
+                                                        <TextBlock HorizontalAlignment="Left" FontSize="10" Text="Talon" Opacity="0.6" />
+                                                        <Border Grid.Row="1" Background="{DynamicResource BorderBrush}" Height="1" Margin="0,4"/>
+                                                        <TextBlock Grid.Row="2" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   VerticalAlignment="Center" 
+                                                                   FontSize="28" 
+                                                                   FontWeight="Bold" 
+                                                                   Text="{Binding Talon}" />
+                                                        <TextBlock Grid.Row="3" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   FontSize="14" 
+                                                                   FontWeight="SemiBold"
                                                                    Text="{Binding RoomLabel}" />
                                                     </Grid>
                                                 </Border>
@@ -107,23 +114,20 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Classes="ticket" Width="118" Height="112" Margin="0,0,14,16">
-                                                    <Grid RowDefinitions="26,34,1,*">
-                                                        <TextBlock Margin="4,0"
-                                                                   VerticalAlignment="Center"
-                                                                   FontSize="13"
-                                                                   Text="Talon" />
-                                                        <Border Grid.Row="1"
-                                                                BorderBrush="{DynamicResource BorderBrush}"
-                                                                BorderThickness="0,1.5,0,1.5">
-                                                            <TextBlock HorizontalAlignment="Center"
-                                                                       VerticalAlignment="Center"
-                                                                       FontSize="14"
-                                                                       Text="{Binding Talon}" />
-                                                        </Border>
-                                                        <TextBlock Grid.Row="3"
-                                                                   Margin="6,8,6,0"
-                                                                   FontSize="13"
+                                                <Border Classes="ticket" Width="118" Height="112" Margin="0,0,14,16" Padding="8">
+                                                    <Grid RowDefinitions="Auto,1,*,Auto">
+                                                        <TextBlock HorizontalAlignment="Left" FontSize="10" Text="Talon" Opacity="0.6" />
+                                                        <Border Grid.Row="1" Background="{DynamicResource BorderBrush}" Height="1" Margin="0,4"/>
+                                                        <TextBlock Grid.Row="2" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   VerticalAlignment="Center" 
+                                                                   FontSize="28" 
+                                                                   FontWeight="Bold" 
+                                                                   Text="{Binding Talon}" />
+                                                        <TextBlock Grid.Row="3" 
+                                                                   HorizontalAlignment="Center" 
+                                                                   FontSize="14" 
+                                                                   FontWeight="SemiBold"
                                                                    Text="{Binding RoomLabel}" />
                                                     </Grid>
                                                 </Border>
