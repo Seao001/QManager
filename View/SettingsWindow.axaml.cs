@@ -64,11 +64,6 @@ namespace QManager.View
             _settingsStatusText.Text = "QManager helps manage bank queue tickets and service rooms.";
         }
 
-        private void DisplaySettings_Click(object? sender, RoutedEventArgs e)
-        {
-            NavigationRequested?.Invoke(this, new NavigationRequestEventArgs("Display"));
-        }
-
         private void SignOut_Click(object? sender, RoutedEventArgs e)
         {
             SessionState.SignOut();

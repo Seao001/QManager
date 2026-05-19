@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>
-    <RestorePackagesPath>C:\Users\User\.nuget\packages</RestorePackagesPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +14,16 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="MySql.Data" Version="9.7.0" />
-    <PackageReference Include="QuestPDF" Version="2026.5.0" />
-    <PackageReference Include="Tmds.DBus.Protocol" Version="0.19.0" />
+    <PackageReference Include="QuestPDF" Version="2024.12.1" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.20.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="UiSmokeTests\**\*.cs" />
+    <None Remove="UiSmokeTests\**\*" />
   </ItemGroup>
 </Project>

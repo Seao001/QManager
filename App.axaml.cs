@@ -19,7 +19,9 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             SessionState.Restore();
-            desktop.MainWindow = SessionState.IsSignedIn ? new MainWindow() : new LoginWindow();
+            Avalonia.Controls.Window initialWindow = SessionState.IsSignedIn ? new MainWindow() : new LoginWindow();
+            desktop.MainWindow = initialWindow;
+            initialWindow.Show();
         }
 
         base.OnFrameworkInitializationCompleted();

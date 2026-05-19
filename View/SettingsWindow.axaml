@@ -86,16 +86,6 @@
                 <Button Classes="nav" Width="480" Height="54" CornerRadius="12" FontSize="18" Content="{Binding [ChangePassword], Source={x:Static svc:LocalizationService.Instance}}" Click="ChangePassword_Click" />
                 <Button Classes="nav" Width="480" Height="54" CornerRadius="12" FontSize="18" Content="{Binding [ChangeLanguage], Source={x:Static svc:LocalizationService.Instance}}" Click="ChangeLanguage_Click" />
                 <Button Classes="nav" Width="480" Height="54" CornerRadius="12" FontSize="18" Content="{Binding [AboutUs], Source={x:Static svc:LocalizationService.Instance}}" Click="AboutUs_Click" />
-                <Button Classes="nav"
-                        Content="{Binding [Display], Source={x:Static svc:LocalizationService.Instance}}" 
-                        Click="DisplaySettings_Click"
-                        Width="480"
-                        Height="54"
-                        CornerRadius="12"
-                        FontSize="18"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        Margin="0,10,0,0" />
 
                 <TextBlock x:Name="SettingsStatusText"
                            Margin="0,10,0,0"

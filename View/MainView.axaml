@@ -1,23 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:svc="using:QManager.Service"
              x:Class="QManager.View.MainView">
     <Grid Background="{DynamicResource WindowBgBrush}">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="30">
-            <TextBlock Text="{Binding [SelectService], Source={x:Static svc:LocalizationService.Instance}}" 
-                       FontSize="28" 
-                       FontWeight="Bold" 
-                       HorizontalAlignment="Center"
-                       Foreground="{DynamicResource MainTextBrush}"/>
-            
-            <UniformGrid Columns="2" Rows="1" Width="600" Height="150">
-                <Button Content="Serviciul A" Margin="10" Classes="action"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                        FontSize="20" CornerRadius="15"/>
-                <Button Content="Serviciul B" Margin="10" Classes="action"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                        FontSize="20" CornerRadius="15"/>
-            </UniformGrid>
-        </StackPanel>
+        <Image Source="file:///C:/Users/User/Pictures/unnamed.webp"
+               Stretch="Uniform"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               IsHitTestVisible="False"/>
     </Grid>
 </UserControl>

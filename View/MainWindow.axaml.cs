@@ -19,6 +19,7 @@ namespace QManager.View
         private Border _sidebarBackground = null!;
         private Grid _sidebarButtonArea = null!;
         private Border _mainContentBorder = null!;
+        private Button _tvModeButton = null!;
 
         private Border _menuPanel = null!;
         private Button _menuBackdrop = null!;
@@ -33,10 +34,7 @@ namespace QManager.View
         public MainWindow()
         {
             AvaloniaXamlLoader.Load(this);
-            this.SystemDecorations = SystemDecorations.None;
-            this.WindowState = WindowState.Maximized;
             ResolveControls();
-            AttachViewNavigation();
 
             this.DataContext = this;
             UpdateMenuUserText();
@@ -44,14 +42,16 @@ namespace QManager.View
             LocalizationService.Instance.LanguageChanged += (s, e) => 
             {
                 UpdateMenuUserText();
-                GenerateBankMenus(); // Regenerăm butoanele pentru a traduce "Casier"/"Talon"
+                GenerateBankMenus();
             };
             SessionState.UsernameChanged += (s, e) => UpdateMenuUserText();
-            SessionState.ProfilePhotoChanged += (s, e) => UpdateMenuAvatar(); // Adăugat: Abonează-te la schimbările fotografiei de profil
+            SessionState.ProfilePhotoChanged += (s, e) => UpdateMenuAvatar();
             
-            GenerateBankMenus(); // Generează butoanele de meniu pentru bănci
+            GenerateBankMenus();
             SetMainContent(new MainView());
             HideMenu();
+            AttachViewNavigation(); // Atașăm navigarea după ce SetMainContent a fost apelat
+            ApplyInitialState(); // Aplicăm starea inițială (Fullscreen)
         }
 
         private void UpdateMenuUserText()
@@ -60,8 +60,14 @@ namespace QManager.View
                 ? LocalizationService.Instance["AdminName"]
                 : SessionState.Username;
         }
+        
+        private void ApplyInitialState()
+        {
+            this.WindowState = WindowState.Maximized;
+            UpdateLayoutForTVMode(false);
+        }
 
-        private void UpdateMenuAvatar() // Adăugat: Metodă pentru a actualiza imaginea avatarului din meniu
+        private void UpdateMenuAvatar()
         {
             Dispatcher.UIThread.Post(() =>
             {
@@ -86,6 +92,7 @@ namespace QManager.View
             _sidebarBackground = GetRequiredControl<Border>("SidebarBackground");
             _sidebarButtonArea = GetRequiredControl<Grid>("SidebarButtonArea");
             _mainContentBorder = GetRequiredControl<Border>("MainContentBorder");
+            _tvModeButton = GetRequiredControl<Button>("TVModeButton");
 
             _menuPanel = GetRequiredControl<Border>("MenuPanel");
             _menuBackdrop = GetRequiredControl<Button>("MenuBackdrop");
@@ -106,8 +113,6 @@ namespace QManager.View
             _mainContentPresenter.PointerPressed += (s, e) => 
             { 
                 if (_menuPanel.IsVisible) HideMenu(); 
-                
-                // Forțează pierderea focusului (blur) de pe orice TextBox activ
                 this.Focus();
             };
         }
@@ -119,10 +124,6 @@ namespace QManager.View
             // Asigurăm că aceste controale sunt rezolvate înainte de a le goli/adăuga copii
             if (_bankCashierMenu == null || _bankDisplayMenu == null)
             {
-                // Aceasta nu ar trebui să se întâmple dacă ResolveControls() este apelată corect înainte
-                // dar ca o măsură de siguranță, putem re-rezolva sau arunca o excepție.
-                // Pentru moment, presupunem că ResolveControls() funcționează.
-                // Dacă această eroare persistă, verificați MainWindow.axaml pentru x:Name="BankCashierMenu" și x:Name="BankDisplayMenu"
                 return; 
             }
 
@@ -134,7 +135,6 @@ namespace QManager.View
                 var cashierLabel = LocalizationService.Instance["CashierSuffix"];
                 var displayLabel = LocalizationService.Instance["DisplaySuffix"];
 
-                // Butoane pentru Casier
                 var cashierButton = new Button
                 {
                     Content = $"{bank} {cashierLabel}",
@@ -145,7 +145,6 @@ namespace QManager.View
                 cashierButton.Click += (s, e) => OnNavigationRequested(s, new NavigationRequestEventArgs($"{bank} Cashier"));
                 _bankCashierMenu.Children.Add(cashierButton);
 
-                // Butoane pentru Ecranul Principal (Talon)
                 var displayButton = new Button
                 {
                     Content = $"{bank} {displayLabel}",
@@ -157,7 +156,6 @@ namespace QManager.View
                 _bankDisplayMenu.Children.Add(displayButton);
             }
 
-            // Adaugă un buton "Toate Taloanele" pentru TalonView fără filtru
             var allTicketsButton = new Button 
             { 
                 Content = LocalizationService.Instance["AllTickets"], 
@@ -165,13 +163,12 @@ namespace QManager.View
                 FontSize = 14, 
                 Margin = new Avalonia.Thickness(12, 0, 0, 2) 
             };
-            allTicketsButton.Click += (s, e) => OnNavigationRequested(s, new NavigationRequestEventArgs("Bank")); // Navighează la TalonView fără filtru
+            allTicketsButton.Click += (s, e) => OnNavigationRequested(s, new NavigationRequestEventArgs("Bank"));
             _bankDisplayMenu.Children.Add(allTicketsButton);
         }
 
         private void OnNavigationRequested(object? sender, NavigationRequestEventArgs e)
         {
-            // Verificăm dacă este o navigare specifică unei bănci
             if (e.Target.EndsWith("Cashier"))
             {
                 var bankName = e.Target.Replace("Cashier", "").Trim();
@@ -182,17 +179,16 @@ namespace QManager.View
                 var bankName = e.Target.Replace("Display", "").Trim();
                 SetMainContent(new TalonView(bankName));
             }
-            else // Navigare generală
+            else
             {
                 switch (e.Target)
                 {
                     case "Home":
                         SetMainContent(new MainView());
                         break;
-                    case "Bank": // Aceasta ar putea fi o navigare către un ecran de selecție bancară generală, sau o valoare implicită
-                        SetMainContent(new TalonView()); // Afișează toate tichetele
+                    case "Bank":
+                        SetMainContent(new TalonView());
                         break;
-                    // Cazul "Casier" și "Talon" generic nu mai este necesar, deoarece navigăm către instanțe specifice băncii
                     case "Dashboard":
                     SetMainContent(new DashboardView());
                     break;
@@ -204,9 +200,6 @@ namespace QManager.View
                     break;
                 case "PasswordChange":
                     SetMainContent(new PasswordChangeView());
-                    break;
-                case "Display":
-                    SetMainContent(new DisplayView());
                     break;
                 case "ChangeName":
                     SetMainContent(new ChangeAdminNameView());
@@ -226,38 +219,32 @@ namespace QManager.View
         }
 
         private void SetMainContent(UserControl view)
-        {
-            // Dezlipim evenimentele de pe view-ul vechi pentru a evita memory leaks
-            if (_currentContentView != null)
-            {
-                if (_currentContentView is MainView mv) mv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is SettingsView sv) sv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is DisplayView dsv) dsv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is PasswordChangeView pcv) pcv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is LanguageSelectionView lsv) lsv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is TalonView tv) tv.NavigationRequested -= OnNavigationRequested; // Unsubscribe TalonView
-                if (_currentContentView is BankView bv) bv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is ChangePhotoView cpv) cpv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is ChangeAdminNameView canv) canv.NavigationRequested -= OnNavigationRequested;
-                if (_currentContentView is DashboardView dv) dv.NavigationRequested -= OnNavigationRequested;
-            }
+        {            
+            ManageNavigationEvent(_currentContentView, false); // Dezabonăm vechiul view
 
             _currentContentView = view;
-
-            // Abonăm noul view la sistemul de navigare
-            if (_currentContentView is MainView nmv) nmv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is SettingsView nsv) nsv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is DisplayView ndsv) ndsv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is PasswordChangeView npcv) npcv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is LanguageSelectionView nlsv) nlsv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is TalonView ntv) ntv.NavigationRequested += OnNavigationRequested; // Subscribe TalonView
-            if (_currentContentView is BankView nbv) nbv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is ChangePhotoView ncpv) ncpv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is ChangeAdminNameView ncanv) ncanv.NavigationRequested += OnNavigationRequested;
-            if (_currentContentView is DashboardView ndv) ndv.NavigationRequested += OnNavigationRequested;
+            ManageNavigationEvent(_currentContentView, true); // Abonăm noul view
 
             _mainContentPresenter.Content = view;
             HideMenu();
+        }
+
+        private void ManageNavigationEvent(UserControl? view, bool subscribe)
+        {
+            if (view is null) return;
+
+            switch (view)
+            {
+                case MainView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case SettingsView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case PasswordChangeView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case LanguageSelectionView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case TalonView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case BankView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case ChangePhotoView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case ChangeAdminNameView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+                case DashboardView v: if (subscribe) v.NavigationRequested += OnNavigationRequested; else v.NavigationRequested -= OnNavigationRequested; break;
+            }
         }
 
         private void ToggleMenu_Click(object? sender, RoutedEventArgs e)
@@ -277,39 +264,44 @@ namespace QManager.View
 
         private void MenuPanel_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            // Prevenim închiderea meniului când se dă click direct pe el (Handled = true)
             e.Handled = true;
         }
 
-        // Logica pentru comutarea Modului TV / Fullscreen
-        private void ToggleTVMode_Click(object? sender, RoutedEventArgs e)
-        {
-            _isTVMode = !_isTVMode;
+        private void ToggleTVMode_Click(object? sender, RoutedEventArgs e) => SetTVMode(!_isTVMode);
 
-            if (_isTVMode)
+        private void SetTVMode(bool isTV)
+        {
+            this.WindowState = isTV ? WindowState.FullScreen : WindowState.Maximized;
+        }
+
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+            if (change.Property == WindowStateProperty && _headerBorder != null)
             {
-                // Trecem în FullScreen și ascundem elementele de UI
-                this.WindowState = WindowState.FullScreen;
+                _isTVMode = this.WindowState == WindowState.FullScreen;
+                UpdateLayoutForTVMode(_isTVMode);
+                if (_isTVMode) HideMenu(); // Închidem meniul lateral (burger) dacă era deschis
+            }
+        }
+
+        private void UpdateLayoutForTVMode(bool isTV)
+        {
+            if (isTV)
+            {
                 _headerBorder.IsVisible = false;
                 _sidebarBackground.IsVisible = false;
                 _sidebarButtonArea.IsVisible = false;
                 _contentGrid.ColumnDefinitions[0].Width = new GridLength(0);
-                
-                // Eliminăm marginile și colțurile rotunjite pentru a ocupa 100% din ecran
                 _rootBorder.Margin = new Thickness(0);
                 _rootBorder.CornerRadius = new CornerRadius(0);
                 _rootBorder.BorderThickness = new Thickness(0);
-                
                 _mainContentBorder.Margin = new Thickness(0);
                 _mainContentBorder.CornerRadius = new CornerRadius(0);
                 _mainContentBorder.BorderThickness = new Thickness(0);
-
-                HideMenu(); // Închidem meniul lateral (burger) dacă era deschis
             }
             else
             {
-                // Revenim la modul fereastră normală (Maximizat)
-                this.WindowState = WindowState.Maximized;
                 _headerBorder.IsVisible = true;
                 _sidebarBackground.IsVisible = true;
                 _sidebarButtonArea.IsVisible = true;

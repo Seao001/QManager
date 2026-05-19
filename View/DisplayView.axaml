@@ -13,20 +13,21 @@
         <TextBlock Text="{Binding [DisplaySettings], Source={x:Static svc:LocalizationService.Instance}}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
         
         <StackPanel Spacing="5">
-            <TextBlock Text="{Binding [Resolution], Source={x:Static svc:LocalizationService.Instance}}" FontSize="16" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding [Resolution], Source={x:Static svc:LocalizationService.Instance}}" FontSize="16" FontWeight="SemiBold" Opacity="0.7"/>
             <ComboBox ItemsSource="{Binding Resolutions}"
                       SelectedItem="{Binding SelectedResolution}" 
                       HorizontalAlignment="Stretch"
+                      IsEnabled="{Binding !IsFullscreen}"
                       Height="45"/>
         </StackPanel>
 
         <ToggleSwitch Content="{Binding [FullscreenMode], Source={x:Static svc:LocalizationService.Instance}}" 
                       IsChecked="{Binding IsFullscreen}" 
-                      OnContent="On" OffContent="Off"/>
+                      OnContent="" OffContent=""/>
 
         <Button Content="{Binding [Apply], Source={x:Static svc:LocalizationService.Instance}}" 
                 Command="{Binding ApplySettingsCommand}" 
-                Classes="nav"
+                Classes="action"
                 Width="200"
                 Height="48"
                 HorizontalAlignment="Center" 
